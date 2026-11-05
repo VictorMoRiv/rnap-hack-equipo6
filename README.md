@@ -1,42 +1,121 @@
-# rnap-hack-equipo6
-This is a project for RNAP Hack 2026
-#ENG
+# Casa Norte: The Interface That Follows Your Intent
 
-#ESP
-Pista 5 — La interfaz que sigue tu intención 
+**RNAP Hack 2026 · Track 5 · Redes Neuronales y Aprendizaje Profundo · November 2026**
 
-Acerca de la empresa. Casa Norte construye un asistente de hogar en español para familias del norte de México. (Empresa ficticia.) 
+A Spanish-language home assistant that understands what the user wants from a single sentence, extracts the key data (time, place, person, item) and shows the screen card that completes the task, instead of answering with long text.
 
-El problema hoy. El asistente siempre ha respondido con mensajes de texto. Los usuarios le han pedido que configure alarmas y agregue artículos a la lista de compras, y les ha respondido con largas frases que deben leer y poner en práctica en otra aplicación. En las pruebas de usuario, si el asistente hubiera mostrado una tarjeta sencilla con un botón, la gente habría terminado la tarea en la mitad del tiempo. 
+> Casa Norte is a fictional company created for the course challenge.
 
-El gran desafío. ¿Puede su sistema comprender lo que el usuario quiere de una oración, seleccionar los datos clave (hora, lugar, persona, elemento) y mostrar el componente de pantalla que completa la tarea? 
+---
 
-Posibles enfoques. 
+## The Problem
 
-Línea base de intención. TF-IDF con un clasificador clásico, o un LSTM pequeño, para elegir la intención. 
+Casa Norte builds a home assistant in Spanish for families in northern Mexico. The assistant has always answered with text. Users ask it to set alarms or add items to the shopping list, and it replies with long sentences they must read and then act on in another app. In user tests, a simple card with a button would have let people finish the task in half the time.
 
-Transformador afinado. Ajuste un BERT español o un DistilBERT multilingüe según las intenciones que elija. 
+## The Challenge
 
-Datos clave. Clasificación de tokens con las etiquetas de ranura del conjunto de datos, o un modelo de lenguaje que devuelve JSON con los campos. 
+Can the system understand what the user wants from one sentence, pick out the key data (time, place, person, item) and show the screen component that completes the task?
 
-Componentes que reaccionan. En Gradio, cada intención muestra su propia tarjeta (alarma, clima, lista de compras, calendario) y oculta el resto. Cuando el usuario cambia un valor en la tarjeta, el estado de la aplicación también cambia. 
+## What This Project Does
 
-Estas son instrucciones, no requisitos. Un flujo completo obtiene una puntuación superior a cinco pantallas a medio terminar. 
+1. The user types an informal sentence, e.g. *"despiértame a las seis y cuarto"*.
+2. The model detects the **intent** (e.g. set an alarm).
+3. The model extracts the **slots** (e.g. time = 06:15).
+4. The interface shows the matching **card** with the data already filled in and hides the rest.
+5. An action on the card produces a **real change** in the app state (e.g. the alarm is added to the alarm list). If the user edits a value on the card, the app state changes too.
 
-Recursos. MASSIVE, locale es-ES, en huggingface.co/datasets/AmazonScience/massive, con 60 intenciones y espacios etiquetados. Elige de 6 a 8 intenciones y entrena solo con ellas. Mida la precisión de la intención y F1 en el conjunto de prueba, y el porcentaje de datos clave extraídos correctamente. Agrega 30 oraciones al estilo mexicano escritas por tu equipo como prueba extra. 
+## Approach
 
-Qué construir. Una interfaz donde el usuario escribe una oración. La tarjeta coincidente aparece con sus datos ya completados y al menos una acción en la tarjeta produce un cambio real, como una alarma agregada a la lista de alarmas. 
+Two levels of the course are compared, as required by the event rules:
 
-Prueba del juez. El juez escribe frases informales que tu equipo no ha visto, como “despiértame a las seis y cuarto”. 
+| Level | Intent detection | Key data (slots) |
+|---|---|---|
+| **Baseline (from scratch)** | TF-IDF + classic classifier (or a small LSTM) | _TODO: describe_ |
+| **Pre-trained Transformer** | Fine-tuned Spanish BERT / multilingual DistilBERT | _TODO: token classification or LLM returning JSON_ |
 
-Por qué es importante. Si los asistentes crearan la pantalla adecuada para cada solicitud, las personas con poca experiencia con aplicaciones completarían las tareas por su cuenta. 
+**Attention in the demo:** _TODO: describe the attention-related element explained in the demo (e.g. attention map)._
 
-Criterios de evaluación. 
+## Intents
 
-Resultados: intención correcta y datos correctos sobre las sentencias del juez. 
+Trained only on a selected subset of **7 intents** from MASSIVE (instead of all 60):
 
-Interfaz: la tarjeta cambia con la intención y su acción funciona. 
+- _TODO: list the 7 intents (e.g. alarm, weather, shopping list, calendar, ...)_
 
-Robustez: español mexicano informal y frases fuera de las intenciones elegidas. 
+Sentences outside these intents are handled gracefully (_TODO: describe fallback behavior_).
 
-Claridad: el usuario entiende lo que entendió el asistente. 
+## Data
+
+- **MASSIVE**, locale `es-ES`, 60 intents with labeled slots: https://huggingface.co/datasets/AmazonScience/massive
+- **Extra test set:** 30 Mexican-style sentences written by the author, used to test robustness with informal Mexican Spanish.
+- Data is split into **train / validation / test** before training. The test set is used only for the final metrics.
+
+## Evaluation
+
+| Metric | Baseline | Transformer |
+|---|---|---|
+| Intent accuracy (MASSIVE test) | _TODO_ | _TODO_ |
+| Intent F1 (MASSIVE test) | _TODO_ | _TODO_ |
+| Slots extracted correctly (%) | _TODO_ | _TODO_ |
+| Intent accuracy (30 Mexican-style sentences) | _TODO_ | _TODO_ |
+
+## Interface
+
+Built with **Gradio**. Each intent has its own card (e.g. alarm, weather, shopping list, calendar) that appears when detected and hides the others.
+
+- During development: run from Google Colab with `share=True`.
+- Final version: Hugging Face Spaces (free CPU) or local laptop.
+- _TODO: add live demo link / screenshots._
+
+**Extra feature:** a cutaway "home simulator" in the style of The Sims inside the interface: little characters, lights that turn on, and an alarm on the bed that reacts to the user's commands.
+
+## Repository Structure
+
+```
+.
+├── data/            # MASSIVE subset + Mexican-style test sentences
+├── notebooks/       # Colab notebooks (baseline, fine-tuning, evaluation)
+├── src/             # Model and interface code
+├── app.py           # Gradio app
+├── requirements.txt
+└── README.md
+```
+_TODO: adjust to the real structure._
+
+## How to Run
+
+```bash
+pip install -r requirements.txt
+python app.py
+```
+
+_TODO: add Colab badge and Hugging Face Space link._
+
+## Judging Criteria (Track 5)
+
+- **Results:** right intent and right data on the judge's unseen sentences.
+- **Interface:** the card changes with the intent and its action works.
+- **Robustness:** informal Mexican Spanish and sentences outside the chosen intents.
+- **Clarity:** the user understands what the assistant understood.
+
+## Event Rules Followed
+
+- Clean train / validation / test split; test set used only for final metrics.
+- Only public, free data or data created by the author; synthetic data is labeled as such.
+- AI tools were used for writing code; the author can explain the whole project.
+- Scope kept small: one complete flow over several half-finished features.
+
+## Timeline
+
+| Date | Checkpoint |
+|---|---|
+| Thu, Nov 5, 2026 | _TODO_ |
+| Thu, Nov 12, 2026 | _TODO_ |
+| Thu, Nov 19, 2026 | Final presentation in English + live judge test |
+
+## Author
+
+_TODO: name · RNAP Hack 2026 · Redes Neuronales y Aprendizaje Profundo_
+
+## License / Data Credits
+
+MASSIVE dataset by Amazon Science (CC BY 4.0).
