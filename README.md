@@ -30,8 +30,8 @@ Two levels of the course are compared, as required by the event rules:
 
 | Level | Intent detection | Key data (slots) |
 |---|---|---|
-| **Baseline (from scratch)** | TF-IDF + classic classifier (or a small LSTM) | _TODO: describe_ |
-| **Pre-trained Transformer** | Fine-tuned Spanish BERT / multilingual DistilBERT | _TODO: token classification or LLM returning JSON_ |
+| **Baseline (from scratch)** | TF-IDF | _TODO: MASSIVE_ |
+| **Pre-trained Transformer** | Clasificador zero-shot multilingüe | _TODO: MASSIVE_ |
 
 **Attention in the demo:** _TODO: describe the attention-related element explained in the demo (e.g. attention map)._
 
