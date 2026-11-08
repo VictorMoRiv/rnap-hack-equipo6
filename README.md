@@ -30,8 +30,8 @@ Two levels of the course are compared, as required by the event rules:
 
 | Level | Intent detection | Key data (slots) |
 |---|---|---|
-| **Baseline (from scratch)** | TF-IDF | _TODO: MASSIVE_ |
-| **Pre-trained Transformer** | Clasificador zero-shot multilingüe | _TODO: MASSIVE_ |
+| **Baseline (from scratch)** | TF-IDF |  MASSIVE_ |
+| **Pre-trained Transformer** | Clasificador zero-shot multilingüe | MASSIVE_ |
 
 
 ## Intents
@@ -71,10 +71,10 @@ Built with **Gradio**. Each intent has its own card (e.g. alarm, weather, shoppi
 
 ```
 .
-├── data/            # MASSIVE subset + Mexican-style test sentences
-├── notebooks/       # Colab notebooks (baseline, fine-tuning, evaluation)
-├── src/             # Model and interface code
-├── app.py           # Gradio app
+├── data/            # MASSIVE + Frases de practica
+├── notebooks/       # VS (baseline, fine-tuning, evaluation)
+├── src/             # Modelo y interfaz del codigo
+├── app.py           # App
 ├── requirements.txt
 └── README.md
 ```
