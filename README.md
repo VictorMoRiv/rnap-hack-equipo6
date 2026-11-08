@@ -33,7 +33,6 @@ Two levels of the course are compared, as required by the event rules:
 | **Baseline (from scratch)** | TF-IDF | _TODO: MASSIVE_ |
 | **Pre-trained Transformer** | Clasificador zero-shot multilingüe | _TODO: MASSIVE_ |
 
-**Attention in the demo:** _TODO: describe the attention-related element explained in the demo (e.g. attention map)._
 
 ## Intents
 
