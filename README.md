@@ -71,12 +71,14 @@ Built with **Gradio**. Each intent has its own card (e.g. alarm, weather, shoppi
 
 ```
 .
-├── data/            # MASSIVE + Frases de practica
-├── notebooks/       # VS (baseline, fine-tuning, evaluation)
-├── src/             # Modelo y interfaz del codigo
-├── app.py           # App
-├── requirements.txt
-└── README.md
+├── app                          #interface
+├── data                         #data
+├── notebooks                    
+├── PROGRESS.md                  #checkpoint
+├── README.md                    #descriptions
+├── RNAP-ET4-D2.pdf              #english    
+├── casa_norte_8intenciones.py   #code     
+└── requirements.txt             #libraries
 ```
 
 ## How to Run
