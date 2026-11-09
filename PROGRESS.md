@@ -1,4 +1,24 @@
 #
+## CP1 - 2026-11-05
+
+- **What we have done**:
+  - Created the public repository with the required structure (README.md, PROGRESS.md, notebooks/, app/, data/, requirements.txt).
+  - Wrote the first version of README.md with the Track 5 brief and the team members.
+
+- **What we haven't done yet**:
+  - Downloading and splitting the MASSIVE dataset.
+  - The baseline model and the zero-shot comparison.
+
+- **Next step**:
+  - Download MASSIVE es-ES, select the 8 intents, split train/dev/test and build the TF-IDF baseline.
+
+- **Who did what**:
+  Victor: created the repository and the initial project structure.
+  Julio: wrote the README.md and organized the team.
+  Travis: started the model code.
+  Tamez: started the English D2 grammar table.
+
+#
 ## CP2 - 2026-11-08
 
 -*What we have done**:
