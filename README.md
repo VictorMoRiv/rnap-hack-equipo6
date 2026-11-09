@@ -30,8 +30,8 @@ Two levels of the course are compared, as required by the event rules:
 
 | Level | Intent detection | Key data (slots) |
 |---|---|---|
-| **Baseline (from scratch)** | TF-IDF |  MASSIVE_ |
-| **Pre-trained Transformer** | Clasificador zero-shot multilingüe | MASSIVE_ |
+| **Baseline (from scratch)** | TF-IDF |  MASSIVE |
+| **Pre-trained Transformer** | Clasificador zero-shot multilingüe | MASSIVE |
 
 
 ## Intents
@@ -110,9 +110,9 @@ python app.py
 | Thu, Nov 12, 2026 | CP3-CP4 |
 | Thu, Nov 19, 2026 | Final presentation in English + live judge test |
 
-## Author
+## Authors
 
-Travis Contreras, Julio Esquivel, Víctor Morales, Angel Tamez  · RNAP Hack 2026 · Redes Neuronales y Aprendizaje Profundo_
+Travis Contreras, Julio Esquivel, Víctor Morales, Angel Tamez  · RNAP Hack 2026 · Redes Neuronales y Aprendizaje Profundo
 
 ## License / Data Credits
 
