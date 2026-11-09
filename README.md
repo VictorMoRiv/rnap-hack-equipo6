@@ -78,7 +78,6 @@ Built with **Gradio**. Each intent has its own card (e.g. alarm, weather, shoppi
 ├── requirements.txt
 └── README.md
 ```
-_TODO: adjust to the real structure._
 
 ## How to Run
 
@@ -87,7 +86,6 @@ pip install -r requirements.txt
 python app.py
 ```
 
-_TODO: add Colab badge and Hugging Face Space link._
 
 ## Judging Criteria (Track 5)
 
@@ -107,13 +105,14 @@ _TODO: add Colab badge and Hugging Face Space link._
 
 | Date | Checkpoint |
 |---|---|
-| Thu, Nov 5, 2026 | _TODO_ |
-| Thu, Nov 12, 2026 | _TODO_ |
+| Thu, Nov 5, 2026 | CP1 |
+| Thu, Nov 8, 2026 | CP2 |
+| Thu, Nov 12, 2026 | CP3-CP4 |
 | Thu, Nov 19, 2026 | Final presentation in English + live judge test |
 
 ## Author
 
-_TODO: name · RNAP Hack 2026 · Redes Neuronales y Aprendizaje Profundo_
+Travis Contreras, Julio Esquivel, Víctor Morales, Angel Tamez  · RNAP Hack 2026 · Redes Neuronales y Aprendizaje Profundo_
 
 ## License / Data Credits
 
