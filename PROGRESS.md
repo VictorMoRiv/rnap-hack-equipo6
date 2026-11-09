@@ -9,13 +9,13 @@
 
 - **Who did what**:
   
-  Travis:
+  Travis: he was in charge of making the code.
 
-  Julio:
+  Julio: added the README.md, help coordinate the team and help with the code.
   
-  Tamez:
+  Tamez: he did the English homework.
   
-  Victor:
+  Victor: added missing information to github and cooperated on the code.
 
 
 #  
