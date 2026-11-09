@@ -1,6 +1,9 @@
-   scikit-learn
-   transformers
-   torch
-   pandas
-   matplotlib
-   sentencepiece
+# MASSIVE still ships a loading script; datasets 3+ removed script support.
+datasets==2.19.0
+scikit-learn>=1.3
+scipy>=1.10
+transformers>=4.40
+torch>=2.1
+pandas>=2.0
+matplotlib>=3.8
+sentencepiece>=0.1.99

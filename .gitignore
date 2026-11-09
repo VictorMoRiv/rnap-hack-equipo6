@@ -218,3 +218,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Datos descargados (no subir el dataset completo)
+data/es-ES.jsonl
