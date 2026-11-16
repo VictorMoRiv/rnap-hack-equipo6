@@ -24,18 +24,19 @@ Can the system understand what the user wants from one sentence, pick out the ke
 4. The interface shows the matching **card** with the data already filled in and hides the rest.
 5. An action on the card produces a **real change** in the app state (e.g. the alarm is added to the alarm list). If the user edits a value on the card, the app state changes too.
 
-> Phase 1 (this checkpoint) covers steps 1–3. The interface (steps 4–5) is built in Phase 2.
+> Phase 1 covered steps 1–3. Phase 2 adds the fine-tuned Transformer and the Gradio interface v1 (steps 4–5).
 
 ## Approach
 
-Two levels of the course are compared on the same test set, as required by the event rules:
+Three levels are compared on the same test set, as required by the event rules:
 
 | Level | Intent detection | Key data (slots) |
 |---|---|---|
 | **Baseline (trained by the team)** | TF-IDF (word 1–2 and character 3–5 grams) + Logistic Regression | Word-level token classifier (`DictVectorizer` + Logistic Regression) |
 | **Pre-trained, no fine-tuning** | Multilingual zero-shot NLI (`MoritzLaurer/mDeBERTa-v3-base-mnli-xnli`) | Not extracted by this model |
+| **Phase 2: fine-tuned Transformer** | BETO (`dccuchile/bert-base-spanish-wwm-cased`) + intent head | BETO + BIO slot head (shared encoder) |
 
-Phase 2 replaces the baseline with a fine-tuned Spanish Transformer (BETO or multilingual DistilBERT) with two heads: intent classification and BIO slot tagging.
+The fine-tuned Transformer uses one Spanish encoder with two heads: an 8-way intent classifier and a 39-label BIO slot tagger (19 slot types × B/I + O).
 
 ## Intents
 
@@ -57,7 +58,7 @@ Two dataset details:
 - `control_luces` **groups** five MASSIVE intents (`iot_hue_lighton`, `iot_hue_lightoff`, `iot_hue_lightup`, `iot_hue_lightdim`, `iot_hue_lightchange`) because `iot_hue_lighton` alone has only 22 training sentences.
 - MASSIVE has no `reminder` intent. Reminders are covered by `calendar_set` ("pon un recordatorio para llamar a Pablo mañana") and `alarm_set`.
 
-Sentences outside these intents are handled as follows: if the classifier's confidence is below 0.50, the system returns a clarification reply instead of forcing a card. A dedicated `out_of_scope` class and a better calibration are Phase 2 work.
+Sentences outside these intents are handled as follows: the fine-tuned model uses a 0.55 confidence threshold and the Gradio app adds a conservative keyword guard for obvious out-of-scope requests. Neither is a learned `out_of_scope` class, so a dedicated class and better calibration remain future work.
 
 ## Data
 
@@ -65,29 +66,46 @@ Sentences outside these intents are handled as follows: if the classifier's conf
 - A local copy of the filtered data is in `data/` (`massive_es-ES_train.jsonl`, `massive_es-ES_validation.jsonl`, `massive_es-ES_test.jsonl`).
 - The official partitions are kept: **train = 3,127**, **validation = 565**, **test = 837** sentences for the 8 classes. `validation` is used only to choose hyperparameters; `test` is used once, for the final metrics.
 - `split_manifest.json` stores the sentence ids of each partition to prove there is no leakage.
-- **Extra test set:** 30 Mexican-style sentences written by the team. They are **not** used for training; evaluation on them is pending (Phase 2).
+- **Extra test set:** 30 Mexican-style sentences written by the team (`data/mexican_test.jsonl`, 25 in-domain + 5 out-of-scope). They are **not** used for training.
 
 ## Evaluation
 
 Results on the MASSIVE `test` split (837 sentences):
 
-| Metric | Baseline (TF-IDF + LogReg) | Pre-trained zero-shot |
-|---|---|---|
-| Intent accuracy | **0.9558** | **0.5436** |
-| Intent macro-F1 | **0.9292** | **0.5706** |
-| Slot span-F1 | **0.6659** | — (not extracted) |
-| Runtime | 3 min 22 s (train + test) | 40 min (test only, CPU) |
-| Accuracy on 30 Mexican sentences | pending | pending |
+| Metric | Baseline (TF-IDF + LogReg) | Zero-shot (mDeBERTa) | BETO fine-tuned |
+|---|---|---|---|
+| Intent accuracy | 0.9558 | 0.5436 | **0.9725** |
+| Intent macro-F1 | 0.9292 | 0.5706 | **0.9602** |
+| Slot span-F1 | **0.7079*** | — (not extracted) | 0.6753 |
+| Slot precision | 0.8447* | — | 0.8150 |
+| Slot recall | 0.6093* | — | 0.5765 |
+| Runtime | 3 min 22 s (train + test) | 40 min (test only, CPU) | 46 min 24 s (train + test, CPU) |
+| Accuracy on 25 Mexican in-domain sentences | 0.920 | — | **0.960** |
+| Out-of-scope rejected (5) | 0 / 5 | — | 0 / 5** |
 
-The TF-IDF baseline is strong in-domain: it saw the training vocabulary and the eight intents. The zero-shot model never saw MASSIVE; its 0.54 accuracy shows that label wording and domain shift matter a lot. It stays in the comparison as the "pre-trained without fine-tuning" level and as a candidate for out-of-scope sentences, not as the final model.
+\* Re-evaluated on the 19 canonical slot types used by the Transformer. Phase 1 reported 0.6659 over all 55 MASSIVE slot types, so the numbers are not directly comparable.
+
+\*\* The interface adds a keyword guard that catches the five out-of-scope demo sentences; the model alone does not reject them.
+
+BETO improves intent accuracy (+0.017) and macro-F1 (+0.031), and transfers better to the team's Mexican sentences. The feature-engineered baseline is still slightly better at exact slot boundaries, so the interface combines BETO's intent and slots with deterministic normalization and fallbacks. The zero-shot model never saw MASSIVE; its 0.54 accuracy shows that label wording and domain shift matter a lot. Full analysis, confusion matrix, learning curves and error cases are in `notebooks/technical_report.md`.
 
 ## Interface
 
-Planned for Phase 2 with **Gradio**: one card per intent (alarm, weather, shopping list, calendar, music, lights) that appears when detected and hides the rest, with editable fields and a button that changes the app state.
+Built with **Gradio** in `app/app.py`: one card per intent (alarm, weather, shopping list, calendar, music, lights) appears when detected and hides the rest, with editable fields and a button that changes the app state.
 
-- During development: run from Google Colab with `share=True`.
-- Final version: Hugging Face Spaces (free CPU) or the team laptop.
-- Live demo link: pending.
+- The intent and slots come from the fine-tuned BETO model in `models/beto_joint/`.
+- Alarms, events, the shopping list, the light state and "now playing" are kept per session with `gr.State`.
+- Time and date values are normalized ("seis y media" → 06:30, "el viernes" → next Friday).
+- Weather is a clearly labeled demo (no external API); music opens a YouTube search.
+- Out-of-scope text gets a clarification card, and confidence below 0.55 asks the user to rephrase.
+
+```bash
+pip install -r requirements.txt
+python notebooks/fase2_transformer.py   # trains and saves models/beto_joint (CPU: ~46 min)
+python app/app.py                       # http://127.0.0.1:7860
+```
+
+Final version: Hugging Face Spaces (free CPU) or the team laptop. Live demo link: pending.
 
 **Planned extra:** a cutaway "home simulator" in the style of The Sims inside the interface: little characters, lights that turn on, and an alarm on the bed that reacts to the user's commands.
 
@@ -95,11 +113,19 @@ Planned for Phase 2 with **Gradio**: one card per intent (alarm, weather, shoppi
 
 ```
 .
-├── app/                     # interface (Phase 2)
-├── data/                    # local copy of the filtered MASSIVE es-ES files
+├── app/app.py               # Gradio interface v1
+├── casa_norte/              # shared NLU code: data parsing, normalization, model
+├── data/                    # MASSIVE es-ES copy + 30 Mexican sentences
+├── models/beto_joint/       # fine-tuned weights (ignored by git, 420 MB)
 ├── notebooks/
-│   ├── casa_norte_8intenciones.py   # training + evaluation script
-│   └── technical_report.md          # sections 1–3 of the report
+│   ├── casa_norte_8intenciones.py   # Phase 1 baseline + zero-shot
+│   ├── fase2_transformer.py         # BETO fine-tune, metrics, figures, errors
+│   ├── eval_baseline_mexican.py      # baseline on the 30 Mexican sentences
+│   ├── figs/                        # confusion matrix, per-class F1, curves
+│   ├── metrics_fase2.json           # Phase 2 metrics
+│   ├── metrics_baseline.json        # baseline on test + Mexican
+│   ├── error_cases.json             # 8 test error cases
+│   └── technical_report.md          # sections 1–5
 ├── PROGRESS.md              # checkpoint log (CP1–CP4)
 ├── README.md
 ├── RNAP-ET4-D2.pdf          # English D2 deliverable
@@ -111,10 +137,12 @@ Planned for Phase 2 with **Gradio**: one card per intent (alarm, weather, shoppi
 
 ```bash
 pip install -r requirements.txt
-python notebooks/casa_norte_8intenciones.py
+python notebooks/casa_norte_8intenciones.py   # Phase 1 baseline + zero-shot
+python notebooks/fase2_transformer.py         # Phase 2 BETO fine-tune (CPU: ~46 min)
+python app/app.py                             # interface v1
 ```
 
-`requirements.txt` pins `datasets==2.19.0` because MASSIVE still ships a loading script and `datasets` 3+ removed script support. The script downloads the dataset through Hugging Face; the copy in `data/` can be used instead.
+`requirements.txt` pins `datasets==2.19.0` because MASSIVE still ships a loading script and `datasets` 3+ removed script support. `fase2_transformer.py` reads the JSONL files already in `data/`, so it does not need to download the dataset. Model weights are not committed (420 MB); the training script regenerates them.
 
 ## Judging Criteria (Track 5)
 
@@ -136,7 +164,7 @@ python notebooks/casa_norte_8intenciones.py
 |---|---|
 | Thu, Nov 5, 2026 | CP1 |
 | Mon, Nov 9, 2026 (extended) | CP2 · Phase 1 baseline |
-| Thu, Nov 12, 2026 | CP3–CP4 · Transformer + interface v1 |
+| Mon, Nov 16, 2026 (extended) | CP3–CP4 · Transformer + interface v1 |
 | Thu, Nov 19, 2026 | Final presentation in English + live judge test |
 
 ## Authors

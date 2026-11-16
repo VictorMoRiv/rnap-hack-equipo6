@@ -47,41 +47,57 @@
   Tamez: completed the English D2 homework (grammar table).
   Victor: set up the repository and GitHub structure, added the data split and the training script, and helped with the code.
 
-#  
-## CP3 - 2026-11-12
+#
+## CP3 - 2026-11-16
 
-- **What we have done**: 
+- **What we have done**:
+  - Froze the team's 30 Mexican-style sentences (`data/mexican_test.jsonl`, 25 in-domain + 5 out-of-scope) before any Phase 2 training.
+  - Re-evaluated the Phase 1 baseline on those sentences: intent accuracy 0.920, macro-F1 0.9214, slot span-F1 0.5366.
+  - Fine-tuned BETO (`dccuchile/bert-base-spanish-wwm-cased`) with two heads: 8-way intent classification and BIO slot tagging (19 canonical slot types + O).
+  - Trained 3 epochs on the official train split (3,127 sentences), selected the best epoch on validation and evaluated once on test: intent accuracy 0.9725, macro-F1 0.9602, slot span-F1 0.6753 (CPU, 46 min 24 s).
+  - Evaluated on the 30 Mexican sentences: intent accuracy 0.960 (24/25 in-domain), macro-F1 0.9643, slot span-F1 0.7600.
+  - Saved metrics, confusion matrix, per-class F1, training curves and 8 error cases in `notebooks/`.
+  - Wrote sections 4 and 5 of `notebooks/technical_report.md`: Transformer solution, configuration, hyperparameter effects, test and Mexican results, and 5+ error cases with causes.
 
-- **What we haven't done yet**: 
+- **What we haven't done yet**:
+  - A learned `out_of_scope` class; the model alone rejects 0/5 OOS sentences.
+  - Slot recall is 0.5765; the feature baseline is still slightly better at exact boundaries (0.7079).
+  - Commits CP3/CP4 and the English deliverables.
 
-- **Next step**: 
+- **Next step**:
+  - Build interface v1 on top of the fine-tuned model (CP4).
+  - Prepare the Troubleshooting Report and D3.
 
 - **Who did what**:
-  
-  Travis:
-
-  Julio:
-  
-  Tamez:
-  
-  Victor:
+  - Victor: fine-tune, evaluation, figures, error analysis and report sections 4–5, with AI pair-programming.
+  - Travis: baseline and dataset review.
+  - Julio: coordination and README review.
+  - Tamez: English deliverables.
 
 
 #
-## CP4 - 2026-11-12
+## CP4 - 2026-11-16
 
-- **What we have done**: 
+- **What we have done**:
+  - Built the Gradio interface v1 in `app/app.py`, connected to `models/beto_joint`.
+  - One card per intent (alarm, weather, shopping list, calendar, music, lights); the detected card appears and the others stay hidden.
+  - Editable fields: time, date, event, place, item, song/artist/playlist, room/action/color.
+  - Working actions with per-session state: save alarm, add/remove from the shopping list, save event, update lights, set "now playing" and open a YouTube search.
+  - Normalization: "seis y media" → 06:30, "el viernes" → next Friday, list item extraction, light action from verbs, adjacent-slot merging.
+  - Out-of-scope guard and confidence threshold (0.55) with a clarification card; low confidence asks the user to rephrase.
+  - Smoke-tested the app (launch, intent cards, fields and actions) on the team laptop.
 
-- **What we haven't done yet**: 
+- **What we haven't done yet**:
+  - Public deployment (Hugging Face Spaces or share link).
+  - Learned OOS class and better slot recall.
+  - Final presentation in English and the judge's live test.
 
-- **Next step**: 
+- **Next step**:
+  - Deploy the app, record the final demo, and prepare the final presentation.
+  - Commit CP3 and CP4 during class time.
 
 - **Who did what**:
-  
-  Travis:
-
-  Julio:
-  
-  Tamez:
-  
-  Victor:
+  - Victor: interface v1, NLU normalization and integration with the model, with AI pair-programming.
+  - Travis: model review.
+  - Julio: coordination and demo script.
+  - Tamez: English deliverables.
