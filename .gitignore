@@ -221,3 +221,9 @@ __marimo__/
 
 # Datos descargados (no subir el dataset completo)
 data/es-ES.jsonl
+
+# Pesos del modelo fine-tuneado (se regeneran con notebooks/fase2_transformer.py)
+models/
+
+# Local exploratory notebook (not part of the deliverable)
+notebooks/entrenamiento.ipynb

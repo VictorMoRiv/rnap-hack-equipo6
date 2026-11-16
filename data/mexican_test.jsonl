@@ -1,0 +1,30 @@
+{"id": "mx01", "utt": "oye, ponme la alarma a las 6:30 de la mañana", "intent": "alarm_set", "slots": [{"type": "time", "value": "6:30"}, {"type": "timeofday", "value": "mañana"}], "item": null, "note": "registro informal"}
+{"id": "mx02", "utt": "wey, despiértame al ratito", "intent": "alarm_set", "slots": [], "item": null, "note": "hora vaga, registro informal"}
+{"id": "mx03", "utt": "pon una alarma para el sábado a las 8", "intent": "alarm_set", "slots": [{"type": "time", "value": "8"}, {"type": "date", "value": "sábado"}], "item": null, "note": "fin de semana"}
+{"id": "mx04", "utt": "¿a qué hora suena mi alarma de mañana?", "intent": "alarm_query", "slots": [{"type": "date", "value": "mañana"}], "item": null, "note": "consulta con fecha relativa"}
+{"id": "mx05", "utt": "dime todas mis alarmas del lunes", "intent": "alarm_query", "slots": [{"type": "date", "value": "lunes"}], "item": null, "note": "consulta en plural"}
+{"id": "mx06", "utt": "¿cuántas alarmas tengo puestas?", "intent": "alarm_query", "slots": [], "item": null, "note": "consulta sin slot"}
+{"id": "mx07", "utt": "¿va a llover hoy en Monterrey?", "intent": "weather_query", "slots": [{"type": "weather_descriptor", "value": "llover"}, {"type": "date", "value": "hoy"}, {"type": "place_name", "value": "Monterrey"}], "item": null, "note": "clima local"}
+{"id": "mx08", "utt": "¿está lloviendo?", "intent": "weather_query", "slots": [{"type": "weather_descriptor", "value": "lloviendo"}], "item": null, "note": "sin lugar explícito"}
+{"id": "mx09", "utt": "¿qué tiempo hace ahorita en la cdmx?", "intent": "weather_query", "slots": [{"type": "place_name", "value": "cdmx"}], "item": null, "note": "abreviatura informal"}
+{"id": "mx10", "utt": "agrega leche a la lista del súper", "intent": "lists_createoradd", "slots": [{"type": "list_name", "value": "súper"}], "item": "leche", "note": "agregar un artículo"}
+{"id": "mx11", "utt": "hay que comprar jitomate y cebolla", "intent": "lists_createoradd", "slots": [], "item": "jitomate y cebolla", "note": "lista implícita"}
+{"id": "mx12", "utt": "anota tortillas en mi lista de compras", "intent": "lists_createoradd", "slots": [{"type": "list_name", "value": "compras"}], "item": "tortillas", "note": "verbo anota"}
+{"id": "mx13", "utt": "quita los huevos de la lista del súper", "intent": "lists_remove", "slots": [{"type": "list_name", "value": "súper"}], "item": "huevos", "note": "quitar un artículo"}
+{"id": "mx14", "utt": "quita lo de la leche", "intent": "lists_remove", "slots": [], "item": "leche", "note": "elipsis"}
+{"id": "mx15", "utt": "elimina el pan de la lista", "intent": "lists_remove", "slots": [], "item": "pan", "note": "lista implícita"}
+{"id": "mx16", "utt": "agenda una junta con Luis el martes a las 10", "intent": "calendar_set", "slots": [{"type": "event_name", "value": "junta"}, {"type": "person", "value": "Luis"}, {"type": "date", "value": "martes"}, {"type": "time", "value": "10"}], "item": null, "note": "evento con persona"}
+{"id": "mx17", "utt": "el lunes tengo al dentista, apúntalo", "intent": "calendar_set", "slots": [{"type": "event_name", "value": "dentista"}, {"type": "date", "value": "lunes"}], "item": null, "note": "elipsis"}
+{"id": "mx18", "utt": "recuérdame pagar la luz el viernes", "intent": "calendar_set", "slots": [{"type": "event_name", "value": "pagar la luz"}, {"type": "date", "value": "viernes"}], "item": null, "note": "recordatorio"}
+{"id": "mx19", "utt": "pon música de Bad Bunny", "intent": "play_music", "slots": [{"type": "artist_name", "value": "Bad Bunny"}], "item": null, "note": "artista"}
+{"id": "mx20", "utt": "reproduce La Bamba", "intent": "play_music", "slots": [{"type": "song_name", "value": "La Bamba"}], "item": null, "note": "canción"}
+{"id": "mx21", "utt": "pon mi playlist de ejercicio", "intent": "play_music", "slots": [{"type": "playlist_name", "value": "ejercicio"}], "item": null, "note": "playlist"}
+{"id": "mx22", "utt": "prende la luz de la sala", "intent": "control_luces", "slots": [{"type": "house_place", "value": "sala"}, {"type": "device_type", "value": "luz"}], "item": null, "note": "encender"}
+{"id": "mx23", "utt": "prende la de arriba", "intent": "control_luces", "slots": [], "item": null, "note": "lugar ambiguo"}
+{"id": "mx24", "utt": "sube la intensidad de las luces del comedor", "intent": "control_luces", "slots": [{"type": "house_place", "value": "comedor"}], "item": null, "note": "subir intensidad"}
+{"id": "mx25", "utt": "pon la luz cálida en la recámara", "intent": "control_luces", "slots": [{"type": "color_type", "value": "cálida"}, {"type": "house_place", "value": "recámara"}], "item": null, "note": "cambiar color"}
+{"id": "mx26", "utt": "¿cuánto está el dólar hoy?", "intent": "out_of_scope", "slots": [], "item": null, "note": "qa_currency, fuera de las 8"}
+{"id": "mx27", "utt": "pide una pizza para la casa", "intent": "out_of_scope", "slots": [], "item": null, "note": "takeaway_order, fuera de las 8"}
+{"id": "mx28", "utt": "manda un correo a mi jefa", "intent": "out_of_scope", "slots": [], "item": null, "note": "email_sendemail, fuera de las 8"}
+{"id": "mx29", "utt": "¿me cuentas un chiste?", "intent": "out_of_scope", "slots": [], "item": null, "note": "general_joke, fuera de las 8"}
+{"id": "mx30", "utt": "pon una película en la tele", "intent": "out_of_scope", "slots": [], "item": null, "note": "recommendation_movies, fuera de las 8"}

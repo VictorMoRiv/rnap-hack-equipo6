@@ -1,0 +1,660 @@
+{
+  "model": "TF-IDF + LogReg (baseline Fase 1)",
+  "sizes": {
+    "train": 3127,
+    "test": 837
+  },
+  "test": {
+    "accuracy": 0.955794504181601,
+    "macro_f1": 0.9291963416204734,
+    "report": {
+      "alarm_set": {
+        "precision": 0.8292682926829268,
+        "recall": 0.8292682926829268,
+        "f1-score": 0.8292682926829268,
+        "support": 41.0
+      },
+      "alarm_query": {
+        "precision": 0.9666666666666667,
+        "recall": 0.8529411764705882,
+        "f1-score": 0.90625,
+        "support": 34.0
+      },
+      "weather_query": {
+        "precision": 0.9807692307692307,
+        "recall": 0.9807692307692307,
+        "f1-score": 0.9807692307692307,
+        "support": 156.0
+      },
+      "lists_createoradd": {
+        "precision": 0.9166666666666666,
+        "recall": 0.8461538461538461,
+        "f1-score": 0.88,
+        "support": 39.0
+      },
+      "lists_remove": {
+        "precision": 0.9782608695652174,
+        "recall": 0.8653846153846154,
+        "f1-score": 0.9183673469387755,
+        "support": 52.0
+      },
+      "calendar_set": {
+        "precision": 0.9403669724770642,
+        "recall": 0.9808612440191388,
+        "f1-score": 0.9601873536299765,
+        "support": 209.0
+      },
+      "play_music": {
+        "precision": 0.9505494505494505,
+        "recall": 0.9829545454545454,
+        "f1-score": 0.9664804469273743,
+        "support": 176.0
+      },
+      "control_luces": {
+        "precision": 1.0,
+        "recall": 0.9846153846153847,
+        "f1-score": 0.9922480620155039,
+        "support": 130.0
+      },
+      "accuracy": 0.955794504181601,
+      "macro avg": {
+        "precision": 0.9453185186721529,
+        "recall": 0.9153685419437845,
+        "f1-score": 0.9291963416204735,
+        "support": 837.0
+      },
+      "weighted avg": {
+        "precision": 0.9561763828297105,
+        "recall": 0.955794504181601,
+        "f1-score": 0.955387772605394,
+        "support": 837.0
+      }
+    },
+    "slot_span_f1": 0.7079365079365079,
+    "slot_precision": 0.8446969696969697,
+    "slot_recall": 0.6092896174863388
+  },
+  "mexican": {
+    "accuracy": 0.92,
+    "macro_f1": 0.9214285714285715,
+    "slot_span_f1": 0.5365853658536585,
+    "oos_rejected": 0,
+    "oos_rejection_rate": 0.0,
+    "threshold": 0.5,
+    "details": [
+      {
+        "id": "mx01",
+        "text": "oye, ponme la alarma a las 6:30 de la mañana",
+        "gold_intent": "alarm_set",
+        "pred_intent": "alarm_set",
+        "confidence": 0.7767012810625278,
+        "gold_spans": [
+          [
+            "time",
+            6,
+            7
+          ],
+          [
+            "timeofday",
+            9,
+            10
+          ]
+        ],
+        "pred_spans": [],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx02",
+        "text": "wey, despiértame al ratito",
+        "gold_intent": "alarm_set",
+        "pred_intent": "alarm_set",
+        "confidence": 0.957495863692649,
+        "gold_spans": [],
+        "pred_spans": [],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx03",
+        "text": "pon una alarma para el sábado a las 8",
+        "gold_intent": "alarm_set",
+        "pred_intent": "alarm_set",
+        "confidence": 0.9967000827905824,
+        "gold_spans": [
+          [
+            "date",
+            5,
+            6
+          ],
+          [
+            "time",
+            8,
+            9
+          ]
+        ],
+        "pred_spans": [
+          [
+            "date",
+            5,
+            6
+          ]
+        ],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx04",
+        "text": "¿a qué hora suena mi alarma de mañana?",
+        "gold_intent": "alarm_query",
+        "pred_intent": "alarm_query",
+        "confidence": 0.814584073276751,
+        "gold_spans": [
+          [
+            "date",
+            7,
+            8
+          ]
+        ],
+        "pred_spans": [],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx05",
+        "text": "dime todas mis alarmas del lunes",
+        "gold_intent": "alarm_query",
+        "pred_intent": "alarm_query",
+        "confidence": 0.990425101626809,
+        "gold_spans": [
+          [
+            "date",
+            5,
+            6
+          ]
+        ],
+        "pred_spans": [
+          [
+            "date",
+            5,
+            6
+          ]
+        ],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx06",
+        "text": "¿cuántas alarmas tengo puestas?",
+        "gold_intent": "alarm_query",
+        "pred_intent": "alarm_query",
+        "confidence": 0.9925371021615166,
+        "gold_spans": [],
+        "pred_spans": [],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx07",
+        "text": "¿va a llover hoy en Monterrey?",
+        "gold_intent": "weather_query",
+        "pred_intent": "weather_query",
+        "confidence": 0.9904501776444203,
+        "gold_spans": [
+          [
+            "date",
+            3,
+            4
+          ],
+          [
+            "place_name",
+            5,
+            6
+          ],
+          [
+            "weather_descriptor",
+            2,
+            3
+          ]
+        ],
+        "pred_spans": [
+          [
+            "date",
+            3,
+            4
+          ],
+          [
+            "place_name",
+            5,
+            6
+          ],
+          [
+            "weather_descriptor",
+            2,
+            3
+          ]
+        ],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx08",
+        "text": "¿está lloviendo?",
+        "gold_intent": "weather_query",
+        "pred_intent": "weather_query",
+        "confidence": 0.9875502145573688,
+        "gold_spans": [
+          [
+            "weather_descriptor",
+            1,
+            2
+          ]
+        ],
+        "pred_spans": [
+          [
+            "weather_descriptor",
+            1,
+            2
+          ]
+        ],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx09",
+        "text": "¿qué tiempo hace ahorita en la cdmx?",
+        "gold_intent": "weather_query",
+        "pred_intent": "weather_query",
+        "confidence": 0.9928234028904325,
+        "gold_spans": [
+          [
+            "place_name",
+            6,
+            7
+          ]
+        ],
+        "pred_spans": [],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx10",
+        "text": "agrega leche a la lista del súper",
+        "gold_intent": "lists_createoradd",
+        "pred_intent": "lists_createoradd",
+        "confidence": 0.9917622256216122,
+        "gold_spans": [
+          [
+            "list_name",
+            6,
+            7
+          ]
+        ],
+        "pred_spans": [],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx11",
+        "text": "hay que comprar jitomate y cebolla",
+        "gold_intent": "lists_createoradd",
+        "pred_intent": "calendar_set",
+        "confidence": 0.458153964181324,
+        "gold_spans": [],
+        "pred_spans": [],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx12",
+        "text": "anota tortillas en mi lista de compras",
+        "gold_intent": "lists_createoradd",
+        "pred_intent": "lists_createoradd",
+        "confidence": 0.7760174109772937,
+        "gold_spans": [
+          [
+            "list_name",
+            6,
+            7
+          ]
+        ],
+        "pred_spans": [
+          [
+            "list_name",
+            6,
+            7
+          ]
+        ],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx13",
+        "text": "quita los huevos de la lista del súper",
+        "gold_intent": "lists_remove",
+        "pred_intent": "lists_remove",
+        "confidence": 0.988856449895379,
+        "gold_spans": [
+          [
+            "list_name",
+            7,
+            8
+          ]
+        ],
+        "pred_spans": [],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx14",
+        "text": "quita lo de la leche",
+        "gold_intent": "lists_remove",
+        "pred_intent": "lists_remove",
+        "confidence": 0.9774583848068623,
+        "gold_spans": [],
+        "pred_spans": [],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx15",
+        "text": "elimina el pan de la lista",
+        "gold_intent": "lists_remove",
+        "pred_intent": "lists_remove",
+        "confidence": 0.9940107644481205,
+        "gold_spans": [],
+        "pred_spans": [],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx16",
+        "text": "agenda una junta con Luis el martes a las 10",
+        "gold_intent": "calendar_set",
+        "pred_intent": "calendar_set",
+        "confidence": 0.9743725178719232,
+        "gold_spans": [
+          [
+            "date",
+            6,
+            7
+          ],
+          [
+            "event_name",
+            2,
+            3
+          ],
+          [
+            "person",
+            4,
+            5
+          ],
+          [
+            "time",
+            9,
+            10
+          ]
+        ],
+        "pred_spans": [
+          [
+            "date",
+            6,
+            7
+          ],
+          [
+            "person",
+            4,
+            5
+          ]
+        ],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx17",
+        "text": "el lunes tengo al dentista, apúntalo",
+        "gold_intent": "calendar_set",
+        "pred_intent": "calendar_set",
+        "confidence": 0.9119450639703479,
+        "gold_spans": [
+          [
+            "date",
+            1,
+            2
+          ],
+          [
+            "event_name",
+            4,
+            5
+          ]
+        ],
+        "pred_spans": [
+          [
+            "date",
+            1,
+            2
+          ]
+        ],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx18",
+        "text": "recuérdame pagar la luz el viernes",
+        "gold_intent": "calendar_set",
+        "pred_intent": "calendar_set",
+        "confidence": 0.8105470899270569,
+        "gold_spans": [
+          [
+            "date",
+            5,
+            6
+          ],
+          [
+            "event_name",
+            1,
+            4
+          ]
+        ],
+        "pred_spans": [
+          [
+            "date",
+            5,
+            6
+          ],
+          [
+            "event_name",
+            1,
+            3
+          ]
+        ],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx19",
+        "text": "pon música de Bad Bunny",
+        "gold_intent": "play_music",
+        "pred_intent": "play_music",
+        "confidence": 0.9988390615084538,
+        "gold_spans": [
+          [
+            "artist_name",
+            3,
+            5
+          ]
+        ],
+        "pred_spans": [
+          [
+            "artist_name",
+            3,
+            4
+          ]
+        ],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx20",
+        "text": "reproduce La Bamba",
+        "gold_intent": "play_music",
+        "pred_intent": "play_music",
+        "confidence": 0.986127198671777,
+        "gold_spans": [
+          [
+            "song_name",
+            1,
+            3
+          ]
+        ],
+        "pred_spans": [],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx21",
+        "text": "pon mi playlist de ejercicio",
+        "gold_intent": "play_music",
+        "pred_intent": "play_music",
+        "confidence": 0.9938680887679395,
+        "gold_spans": [
+          [
+            "playlist_name",
+            4,
+            5
+          ]
+        ],
+        "pred_spans": [
+          [
+            "playlist_name",
+            2,
+            5
+          ]
+        ],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx22",
+        "text": "prende la luz de la sala",
+        "gold_intent": "control_luces",
+        "pred_intent": "control_luces",
+        "confidence": 0.9924187748499202,
+        "gold_spans": [
+          [
+            "device_type",
+            2,
+            3
+          ],
+          [
+            "house_place",
+            5,
+            6
+          ]
+        ],
+        "pred_spans": [
+          [
+            "house_place",
+            5,
+            6
+          ]
+        ],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx23",
+        "text": "prende la de arriba",
+        "gold_intent": "control_luces",
+        "pred_intent": "play_music",
+        "confidence": 0.49913548170730015,
+        "gold_spans": [],
+        "pred_spans": [],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx24",
+        "text": "sube la intensidad de las luces del comedor",
+        "gold_intent": "control_luces",
+        "pred_intent": "control_luces",
+        "confidence": 0.9866779282456871,
+        "gold_spans": [
+          [
+            "house_place",
+            7,
+            8
+          ]
+        ],
+        "pred_spans": [],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx25",
+        "text": "pon la luz cálida en la recámara",
+        "gold_intent": "control_luces",
+        "pred_intent": "control_luces",
+        "confidence": 0.9602812872024657,
+        "gold_spans": [
+          [
+            "color_type",
+            3,
+            4
+          ],
+          [
+            "house_place",
+            6,
+            7
+          ]
+        ],
+        "pred_spans": [
+          [
+            "color_type",
+            3,
+            4
+          ]
+        ],
+        "out_of_scope": false
+      },
+      {
+        "id": "mx26",
+        "text": "¿cuánto está el dólar hoy?",
+        "gold_intent": "out_of_scope",
+        "pred_intent": "weather_query",
+        "confidence": 0.9744182954437561,
+        "gold_spans": [],
+        "pred_spans": [],
+        "out_of_scope": true
+      },
+      {
+        "id": "mx27",
+        "text": "pide una pizza para la casa",
+        "gold_intent": "out_of_scope",
+        "pred_intent": "calendar_set",
+        "confidence": 0.5453639746347431,
+        "gold_spans": [],
+        "pred_spans": [
+          [
+            "house_place",
+            5,
+            6
+          ]
+        ],
+        "out_of_scope": true
+      },
+      {
+        "id": "mx28",
+        "text": "manda un correo a mi jefa",
+        "gold_intent": "out_of_scope",
+        "pred_intent": "calendar_set",
+        "confidence": 0.8287425122405646,
+        "gold_spans": [],
+        "pred_spans": [
+          [
+            "relation",
+            5,
+            6
+          ]
+        ],
+        "out_of_scope": true
+      },
+      {
+        "id": "mx29",
+        "text": "¿me cuentas un chiste?",
+        "gold_intent": "out_of_scope",
+        "pred_intent": "calendar_set",
+        "confidence": 0.7243190974636887,
+        "gold_spans": [],
+        "pred_spans": [],
+        "out_of_scope": true
+      },
+      {
+        "id": "mx30",
+        "text": "pon una película en la tele",
+        "gold_intent": "out_of_scope",
+        "pred_intent": "play_music",
+        "confidence": 0.7500382467190038,
+        "gold_spans": [],
+        "pred_spans": [],
+        "out_of_scope": true
+      }
+    ]
+  }
+}

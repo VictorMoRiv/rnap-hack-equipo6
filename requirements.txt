@@ -7,3 +7,4 @@ torch>=2.1
 pandas>=2.0
 matplotlib>=3.8
 sentencepiece>=0.1.99
+gradio>=4.0

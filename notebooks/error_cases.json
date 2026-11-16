@@ -1,0 +1,167 @@
+[
+  {
+    "type": "intent",
+    "text": "despiértame a las seis de la mañana del jueves para tener yo tiempo para la reunión",
+    "gold_intent": "calendar_set",
+    "pred_intent": "alarm_set",
+    "confidence": 0.9844,
+    "gold_spans": [
+      [
+        "date",
+        8,
+        9
+      ],
+      [
+        "event_name",
+        15,
+        16
+      ],
+      [
+        "time",
+        3,
+        7
+      ]
+    ],
+    "pred_spans": [
+      [
+        "date",
+        8,
+        9
+      ],
+      [
+        "event_name",
+        15,
+        16
+      ],
+      [
+        "time",
+        3,
+        7
+      ]
+    ],
+    "cause": "Confundió calendar_set con alarm_set; comparten vocabulario de acción."
+  },
+  {
+    "type": "intent",
+    "text": "si hay un evento de espectáculo elimínelo",
+    "gold_intent": "lists_remove",
+    "pred_intent": "calendar_set",
+    "confidence": 0.9756,
+    "gold_spans": [],
+    "pred_spans": [],
+    "cause": "Confundió lists_remove con calendar_set; comparten vocabulario de acción."
+  },
+  {
+    "type": "intent",
+    "text": "debería abrir el techo solar",
+    "gold_intent": "weather_query",
+    "pred_intent": "control_luces",
+    "confidence": 0.9547,
+    "gold_spans": [
+      [
+        "weather_descriptor",
+        1,
+        5
+      ]
+    ],
+    "pred_spans": [
+      [
+        "house_place",
+        4,
+        5
+      ]
+    ],
+    "cause": "Confundió weather_query con control_luces; comparten vocabulario de acción."
+  },
+  {
+    "type": "intent",
+    "text": "me acorde de poner una alarma para recordarme mi próxima cita con el médico",
+    "gold_intent": "alarm_query",
+    "pred_intent": "alarm_set",
+    "confidence": 0.9414,
+    "gold_spans": [
+      [
+        "event_name",
+        10,
+        14
+      ]
+    ],
+    "pred_spans": [
+      [
+        "event_name",
+        10,
+        14
+      ]
+    ],
+    "cause": "Confundió alarm_query con alarm_set; comparten vocabulario de acción."
+  },
+  {
+    "type": "intent",
+    "text": "condición de baja refrigeración",
+    "gold_intent": "weather_query",
+    "pred_intent": "control_luces",
+    "confidence": 0.9207,
+    "gold_spans": [],
+    "pred_spans": [
+      [
+        "weather_descriptor",
+        3,
+        4
+      ]
+    ],
+    "cause": "Confundió weather_query con control_luces; comparten vocabulario de acción."
+  },
+  {
+    "type": "intent",
+    "text": "añadir la comida con david",
+    "gold_intent": "calendar_set",
+    "pred_intent": "lists_createoradd",
+    "confidence": 0.9107,
+    "gold_spans": [
+      [
+        "person",
+        4,
+        5
+      ]
+    ],
+    "pred_spans": [],
+    "cause": "Confundió calendar_set con lists_createoradd; comparten vocabulario de acción."
+  },
+  {
+    "type": "intent",
+    "text": "establecer notificaciones sobre los desastres climáticos actuales en estados unidos",
+    "gold_intent": "calendar_set",
+    "pred_intent": "weather_query",
+    "confidence": 0.8716,
+    "gold_spans": [
+      [
+        "event_name",
+        4,
+        6
+      ],
+      [
+        "place_name",
+        8,
+        10
+      ]
+    ],
+    "pred_spans": [
+      [
+        "place_name",
+        8,
+        9
+      ]
+    ],
+    "cause": "Confundió calendar_set con weather_query; comparten vocabulario de acción."
+  },
+  {
+    "type": "intent",
+    "text": "reemplaza",
+    "gold_intent": "lists_remove",
+    "pred_intent": "lists_createoradd",
+    "confidence": 0.7909,
+    "gold_spans": [],
+    "pred_spans": [],
+    "cause": "Confundió lists_remove con lists_createoradd; comparten vocabulario de acción."
+  }
+]

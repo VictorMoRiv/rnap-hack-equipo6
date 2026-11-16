@@ -1,0 +1,53 @@
+{
+  "subset": 960,
+  "epochs": 3,
+  "seed": 42,
+  "validation": "full 565-sentence validation split",
+  "note": "Reduced stratified subset (120 per intent); absolute scores are lower than the full run. Compare rows only within this table.",
+  "runs": {
+    "lr5_b16_len40": {
+      "label": "LR 5e-5, batch 16, max len 40",
+      "best_epoch": 3,
+      "val_accuracy": 0.954,
+      "val_macro_f1": 0.9279,
+      "val_slot_span_f1": 0.5779,
+      "test_accuracy": 0.9558,
+      "test_macro_f1": 0.9413,
+      "test_slot_span_f1": 0.6257,
+      "train_seconds": 898.2
+    },
+    "lr2_b16_len40": {
+      "label": "LR 2e-5, batch 16, max len 40",
+      "best_epoch": 3,
+      "val_accuracy": 0.9327,
+      "val_macro_f1": 0.8987,
+      "val_slot_span_f1": 0.3447,
+      "test_accuracy": 0.9283,
+      "test_macro_f1": 0.9132,
+      "test_slot_span_f1": 0.3799,
+      "train_seconds": 836.9
+    },
+    "lr2_b32_len40": {
+      "label": "LR 2e-5, batch 32, max len 40",
+      "best_epoch": 3,
+      "val_accuracy": 0.9274,
+      "val_macro_f1": 0.8938,
+      "val_slot_span_f1": 0.2025,
+      "test_accuracy": 0.9116,
+      "test_macro_f1": 0.8809,
+      "test_slot_span_f1": 0.2218,
+      "train_seconds": 653.2
+    },
+    "lr2_b16_len24": {
+      "label": "LR 2e-5, batch 16, max len 24",
+      "best_epoch": 3,
+      "val_accuracy": 0.9416,
+      "val_macro_f1": 0.9107,
+      "val_slot_span_f1": 0.3543,
+      "test_accuracy": 0.9331,
+      "test_macro_f1": 0.9206,
+      "test_slot_span_f1": 0.3864,
+      "train_seconds": 666.5
+    }
+  }
+}
