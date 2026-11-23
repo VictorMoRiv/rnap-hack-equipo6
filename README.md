@@ -92,17 +92,17 @@ BETO improves intent accuracy (+0.017) and macro-F1 (+0.031), and transfers bett
 
 ## Interface
 
-Built with **Gradio** in `app/app.py` (v2): each intent has its own `gr.Group(visible=False)` panel; only the detected one is shown, with editable fields and a button that changes the app state.
+Built with **Gradio** in `app/app.py` (merged v2): a dark commercial UI with animated HTML cards, an **Enviar** button, editable action fields, an **Aplicar acción** button and a live **Estado de la Casa** tab.
 
-- The intent and slots come from a local bundle. Loading is offline and measured below 3 s on the demo CPU; the live app currently serves `models/beto_joint/` because the retrain to `modelo_casa_norte/` was stopped.
-- Alarms, events, the shopping list, the light state and "now playing" are kept per session with real `gr.State` objects; the panel can be cleared or marked complete.
-- The banner states the flow explicitly: text → intent + slots → editable card → state change.
+- The intent and slots come from a local bundle. Loading is offline and measured below 3 s on the demo CPU; the live app currently serves `models/beto_joint/` because the retrain to `modelo_casa_norte/` was stopped. The app uses `modelo_casa_norte/` automatically if that bundle is created later.
+- Alarms, events, the shopping list, the light state and "now playing" are kept per session with real `gr.State` objects; the card can be cleared with **Limpiar**.
+- Relative alarms (*en 20 minutos*), cancellation/removal intents and multi-item lists are handled by explicit rules and fallbacks.
 - Time and date normalization covers informal forms: *seis y cuarto* → 06:15, *ocho menos diez* → 07:50, *en 20 minutos* → current time + 20 min, *el viernes* → next Friday.
 - Items are split deterministically by commas, *y*, *e* or *and*; place, person and list values are cleaned from leading prepositions and articles.
 - Weather is a clearly labeled demo (no external API); music opens a YouTube search.
-- Out-of-scope text or confidence below the configured threshold shows the same clean "No reconozco esa acción todavía" card; no guessed card is forced.
-- A **Técnico** tab renders the last-layer attention map with `plot_attention_map()`; the header shows intent, confidence and per-request inference time.
-- Six quick examples include the OOS trap *"transfiere 500 pesos a mi hermana"*.
+- Out-of-scope text or confidence below the configured threshold shows the same clean "No reconozco esa acción todavía" card; transfers and jokes are covered by the keyword guard.
+- A **Técnico** tab renders the last-layer attention map with `plot_attention_map()`.
+- Nine quick examples include the OOS trap *"transfiere 500 pesos a mi hermana"*.
 
 ```bash
 pip install -r requirements.txt
@@ -140,6 +140,8 @@ Current version: local service on the team laptop at `http://localhost:7860` (HT
 ├── EVIDENCIA_APRENDIZAJE_ACT12_TROUBLESHOOTING.md
 ├── RNAP-ET4-D3-ACT12-TROUBLESHOOTING-EQUIPO6.pdf  # English D3 / Act. 12 evidence
 ├── RNAP-ET4-D2.pdf          # English D2 deliverable
+├── CIIT-ET4-D3-EQUIPO_LOBOSALFA.pdf  # reference D3 example
+├── Casa Norte pitch deck.pdf        # final presentation deck
 ├── requirements.txt
 └── split_manifest.json      # ids of the train/validation/test splits
 ```

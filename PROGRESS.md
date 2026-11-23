@@ -114,6 +114,7 @@
   - Relaunched the local service at `http://localhost:7860` (HTTP 200) and added production cells to `notebooks/entrenamiento.ipynb` plus Section 6 of `notebooks/technical_report.md`.
   - Reduced `requirements.txt` to the six packages needed by Hugging Face Spaces.
   - Wrote the English Activity 12 troubleshooting evidence (`EVIDENCIA_APRENDIZAJE_ACT12_TROUBLESHOOTING.md` and `RNAP-ET4-D3-ACT12-TROUBLESHOOTING-EQUIPO6.pdf`) with five incidents, fixes and an evidence index.
+  - Merged the teammate's dark animated UI, relative alarms, multi-item lists, removal intents, `Enviar` button, reference D3 PDF and final pitch deck into this branch.
 
 - **What we haven't done yet**:
   - The 4-epoch transformer retrain that writes `modelo_casa_norte/`, its calibrated threshold sweep and its final attention map; stopped at the user's request to keep the model work short.

@@ -38,7 +38,7 @@ This report documents the technical incidents found while productionizing the Ca
 - In `plot_attention_map()`, temporarily switch the encoder to `eager`, run one forward pass with `output_attentions=True`, and restore the previous implementation in a `finally` block.
 - Save `output_attentions=True` in the bundle config so the diagnostic path is reproducible.
 
-**Evidence.** `casa_norte/model.py:11`, `casa_norte/model.py:167`, `notebooks/figs/attention_app.png`, `app/app.py:558`. The smoke test produced an attention matrix with shape `(11, 11)` for an 11-token sentence.
+**Evidence.** `casa_norte/model.py:11`, `casa_norte/model.py:167`, `notebooks/figs/attention_app.png`, and `render_attention()` in `app/app.py`. The smoke test produced an attention matrix with shape `(11, 11)` for an 11-token sentence.
 
 **Result.** Fast path preserved for prediction; attention visualization works on demand without permanently slowing the app.
 
@@ -115,7 +115,7 @@ This report documents the technical incidents found while productionizing the Ca
 - Added a conservative keyword guard for obvious out-of-scope domains such as transfers, jokes and food delivery.
 - Both paths now render the same clean card: *“No reconozco esa acción todavía.”*
 
-**Evidence.** `app/app.py:275`, `app/app.py:50`, `notebooks/technical_report.md:131`, `data/mexican_test.jsonl` (8 out-of-scope rows).
+**Evidence.** `out_of_scope()` and `understand()` in `app/app.py`, `notebooks/technical_report.md:131`, `data/mexican_test.jsonl` (8 out-of-scope rows).
 
 **Result.** The demo no longer forces a wrong card during live tests. A learned OOS class remains future work.
 
