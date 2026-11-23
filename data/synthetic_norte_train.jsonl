@@ -1,0 +1,71 @@
+{"id": "syn01", "utt": "despiértame a las seis y cuarto", "annot_utt": "despiértame a las [time: seis y cuarto]", "intent": "alarm_set", "synthetic": true, "item": null, "note": "hora norteña en palabras"}
+{"id": "syn02", "utt": "ponme la alarma a las 7 y media", "annot_utt": "ponme la alarma a las [time: 7 y media]", "intent": "alarm_set", "synthetic": true, "item": null, "note": "hora semis numérica"}
+{"id": "syn03", "utt": "pon la alarma a las ocho menos diez", "annot_utt": "pon la alarma a las [time: ocho menos diez]", "intent": "alarm_set", "synthetic": true, "item": null, "note": "menos en palabras"}
+{"id": "syn04", "utt": "despiértame en 20 minutos", "annot_utt": "despiértame en [time: 20 minutos]", "intent": "alarm_set", "synthetic": true, "item": null, "note": "hora relativa"}
+{"id": "syn05", "utt": "pon una alarma para el sábado a las nueve", "annot_utt": "pon una alarma para el [date: sábado] a las [time: nueve]", "intent": "alarm_set", "synthetic": true, "item": null, "note": "fecha y hora"}
+{"id": "syn06", "utt": "avísame a las 5 de la tarde con la alarma", "annot_utt": "avísame a las [time: 5 de la tarde] con la alarma", "intent": "alarm_set", "synthetic": true, "item": null, "note": "tarde"}
+{"id": "syn07", "utt": "alarma a las diez de la noche", "annot_utt": "alarma a las [time: diez de la noche]", "intent": "alarm_set", "synthetic": true, "item": null, "note": "noche"}
+{"id": "syn08", "utt": "pon el despertador a las seis y cuarto de la mañana", "annot_utt": "pon el despertador a las [time: seis y cuarto] de la [timeofday: mañana]", "intent": "alarm_set", "synthetic": true, "item": null, "note": "despertador regional"}
+
+{"id": "syn09", "utt": "qué alarmas tengo para mañana", "annot_utt": "qué alarmas tengo para [date: mañana]", "intent": "alarm_query", "synthetic": true, "item": null, "note": "consulta con fecha"}
+{"id": "syn10", "utt": "a qué hora suena la alarma del lunes", "annot_utt": "a qué hora suena la alarma del [date: lunes]", "intent": "alarm_query", "synthetic": true, "item": null, "note": "día de la semana"}
+{"id": "syn11", "utt": "muéstrame mis alarmas", "annot_utt": "muéstrame mis alarmas", "intent": "alarm_query", "synthetic": true, "item": null, "note": "sin slots"}
+{"id": "syn12", "utt": "dime cuántas alarmas tengo puestas", "annot_utt": "dime cuántas alarmas tengo puestas", "intent": "alarm_query", "synthetic": true, "item": null, "note": "conteo"}
+{"id": "syn13", "utt": "qué alarma puse para el sábado", "annot_utt": "qué alarma puse para el [date: sábado]", "intent": "alarm_query", "synthetic": true, "item": null, "note": "fin de semana"}
+{"id": "syn14", "utt": "consulta la alarma de las seis", "annot_utt": "consulta la alarma de las [time: seis]", "intent": "alarm_query", "synthetic": true, "item": null, "note": "hora escrita"}
+{"id": "syn15", "utt": "revisa mis alarmas de hoy", "annot_utt": "revisa mis alarmas de [date: hoy]", "intent": "alarm_query", "synthetic": true, "item": null, "note": "hoy"}
+{"id": "syn16", "utt": "dime cuándo es mi siguiente alarma", "annot_utt": "dime cuándo es mi siguiente alarma", "intent": "alarm_query", "synthetic": true, "item": null, "note": "siguiente alarma"}
+
+{"id": "syn17", "utt": "cómo va a estar el calor hoy en Monterrey", "annot_utt": "cómo va a estar el [weather_descriptor: calor] [date: hoy] en [place_name: Monterrey]", "intent": "weather_query", "synthetic": true, "item": null, "note": "calor en Monterrey"}
+{"id": "syn18", "utt": "cómo estará el clima mañana en Guadalajara", "annot_utt": "cómo estará el clima [date: mañana] en [place_name: Guadalajara]", "intent": "weather_query", "synthetic": true, "item": null, "note": "clima mañana"}
+{"id": "syn19", "utt": "va a llover esta tarde en la ciudad de México", "annot_utt": "va a [weather_descriptor: llover] [timeofday: esta tarde] en [place_name: la ciudad de México]", "intent": "weather_query", "synthetic": true, "item": null, "note": "tarde CDMX"}
+{"id": "syn20", "utt": "qué tiempo hace ahorita en Monterrey", "annot_utt": "qué tiempo hace ahorita en [place_name: Monterrey]", "intent": "weather_query", "synthetic": true, "item": null, "note": "ahorita"}
+{"id": "syn21", "utt": "está lloviendo en Saltillo", "annot_utt": "está [weather_descriptor: lloviendo] en [place_name: Saltillo]", "intent": "weather_query", "synthetic": true, "item": null, "note": "progresivo"}
+{"id": "syn22", "utt": "dime el pronóstico para el viernes en CDMX", "annot_utt": "dime el pronóstico para el [date: viernes] en [place_name: CDMX]", "intent": "weather_query", "synthetic": true, "item": null, "note": "abreviatura"}
+{"id": "syn23", "utt": "hará frío esta noche en el norte", "annot_utt": "hará [weather_descriptor: frío] [timeofday: esta noche] en el norte", "intent": "weather_query", "synthetic": true, "item": null, "note": "frío nocturno"}
+{"id": "syn24", "utt": "cómo amanecerá el domingo en Zapopan", "annot_utt": "cómo amanecerá el [date: domingo] en [place_name: Zapopan]", "intent": "weather_query", "synthetic": true, "item": null, "note": "amanecer"}
+
+{"id": "syn25", "utt": "agrega tortillas, aguacate y un doce a la lista del súper", "annot_utt": "agrega tortillas, aguacate y un doce a la lista del [list_name: súper]", "intent": "lists_createoradd", "synthetic": true, "item": "tortillas, aguacate, doce", "note": "múltiples artículos"}
+{"id": "syn26", "utt": "anota leche y huevos en mi lista de compras", "annot_utt": "anota leche y huevos en mi lista de [list_name: compras]", "intent": "lists_createoradd", "synthetic": true, "item": "leche, huevos", "note": "y"}
+{"id": "syn27", "utt": "hay que comprar jitomate, cebolla y limón", "annot_utt": "hay que comprar jitomate, cebolla y limón", "intent": "lists_createoradd", "synthetic": true, "item": "jitomate, cebolla, limón", "note": "lista implícita"}
+{"id": "syn28", "utt": "agrégale pan a la lista del súper", "annot_utt": "agrégale pan a la lista del [list_name: súper]", "intent": "lists_createoradd", "synthetic": true, "item": "pan", "note": "clítico regional"}
+{"id": "syn29", "utt": "pon agua en la lista", "annot_utt": "pon agua en la lista", "intent": "lists_createoradd", "synthetic": true, "item": "agua", "note": "lista implícita corta"}
+{"id": "syn30", "utt": "apunta café, azúcar y crema en la lista de la casa", "annot_utt": "apunta café, azúcar y crema en la lista de la [list_name: casa]", "intent": "lists_createoradd", "synthetic": true, "item": "café, azúcar, crema", "note": "tres artículos"}
+{"id": "syn31", "utt": "mete el queso a la lista de compras", "annot_utt": "mete el queso a la lista de [list_name: compras]", "intent": "lists_createoradd", "synthetic": true, "item": "queso", "note": "mete"}
+{"id": "syn32", "utt": "quiero sumar mangos a mi lista del mercado", "annot_utt": "quiero sumar mangos a mi lista del [list_name: mercado]", "intent": "lists_createoradd", "synthetic": true, "item": "mangos", "note": "sumar"}
+
+{"id": "syn33", "utt": "quita los huevos de la lista del súper", "annot_utt": "quita los huevos de la lista del [list_name: súper]", "intent": "lists_remove", "synthetic": true, "item": "huevos", "note": "quitar"}
+{"id": "syn34", "utt": "borra la leche de mi lista de compras", "annot_utt": "borra la leche de mi lista de [list_name: compras]", "intent": "lists_remove", "synthetic": true, "item": "leche", "note": "borrar"}
+{"id": "syn35", "utt": "elimina el pan y la mantequilla de la lista", "annot_utt": "elimina el pan y la mantequilla de la lista", "intent": "lists_remove", "synthetic": true, "item": "pan, mantequilla", "note": "dos artículos"}
+{"id": "syn36", "utt": "saca el jitomate de la lista del mercado", "annot_utt": "saca el jitomate de la lista del [list_name: mercado]", "intent": "lists_remove", "synthetic": true, "item": "jitomate", "note": "sacar"}
+{"id": "syn37", "utt": "quita lo de la leche", "annot_utt": "quita lo de la leche", "intent": "lists_remove", "synthetic": true, "item": "leche", "note": "elipsis"}
+{"id": "syn38", "utt": "borra el azúcar de la lista de la casa", "annot_utt": "borra el azúcar de la lista de la [list_name: casa]", "intent": "lists_remove", "synthetic": true, "item": "azúcar", "note": "lista casa"}
+{"id": "syn39", "utt": "ya no quiero las tortillas en la lista", "annot_utt": "ya no quiero las tortillas en la lista", "intent": "lists_remove", "synthetic": true, "item": "tortillas", "note": "negación"}
+{"id": "syn40", "utt": "elimina el café y el té de mi lista de compras", "annot_utt": "elimina el café y el té de mi lista de [list_name: compras]", "intent": "lists_remove", "synthetic": true, "item": "café, té", "note": "dos artículos"}
+
+{"id": "syn41", "utt": "recuérdame jugar gta vi a las 4", "annot_utt": "recuérdame [event_name: jugar gta vi] a las [time: 4]", "intent": "calendar_set", "synthetic": true, "item": null, "note": "jugar con cue de calendario"}
+{"id": "syn42", "utt": "agenda una junta con Luis el martes a las 10", "annot_utt": "agenda una [event_name: junta] con [person: Luis] el [date: martes] a las [time: 10]", "intent": "calendar_set", "synthetic": true, "item": null, "note": "junta con persona"}
+{"id": "syn43", "utt": "recuérdame pagar la luz el viernes", "annot_utt": "recuérdame [event_name: pagar la luz] el [date: viernes]", "intent": "calendar_set", "synthetic": true, "item": null, "note": "recordatorio de pago"}
+{"id": "syn44", "utt": "apunta el dentista el lunes a mediodía", "annot_utt": "apunta el [event_name: dentista] el [date: lunes] a [time: mediodía]", "intent": "calendar_set", "synthetic": true, "item": null, "note": "mediodía"}
+{"id": "syn45", "utt": "programa la llamada con María mañana a las tres", "annot_utt": "programa la [event_name: llamada] con [person: María] [date: mañana] a las [time: tres]", "intent": "calendar_set", "synthetic": true, "item": null, "note": "llamada"}
+{"id": "syn46", "utt": "avísame de la entrega el sábado por la mañana", "annot_utt": "avísame de la [event_name: entrega] el [date: sábado] por la [timeofday: mañana]", "intent": "calendar_set", "synthetic": true, "item": null, "note": "entrega"}
+{"id": "syn47", "utt": "pon en el calendario cortar el pasto el domingo", "annot_utt": "pon en el calendario [event_name: cortar el pasto] el [date: domingo]", "intent": "calendar_set", "synthetic": true, "item": null, "note": "calendario explícito"}
+{"id": "syn48", "utt": "recuerda la cita con el médico el jueves a las 11", "annot_utt": "recuerda la [event_name: cita] con [person: el médico] el [date: jueves] a las [time: 11]", "intent": "calendar_set", "synthetic": true, "item": null, "note": "cita médica"}
+
+{"id": "syn49", "utt": "pon música de Bad Bunny", "annot_utt": "pon música de [artist_name: Bad Bunny]", "intent": "play_music", "synthetic": true, "item": null, "note": "artista"}
+{"id": "syn50", "utt": "reproduce La Bamba", "annot_utt": "reproduce [song_name: La Bamba]", "intent": "play_music", "synthetic": true, "item": null, "note": "canción"}
+{"id": "syn51", "utt": "pon mi playlist de ejercicio", "annot_utt": "pon mi [playlist_name: playlist de ejercicio]", "intent": "play_music", "synthetic": true, "item": null, "note": "playlist"}
+{"id": "syn52", "utt": "toca algo de rock en español", "annot_utt": "toca algo de [music_genre: rock en español]", "intent": "play_music", "synthetic": true, "item": null, "note": "género"}
+{"id": "syn53", "utt": "reproduce la canción Recuérdame", "annot_utt": "reproduce la canción [song_name: Recuérdame]", "intent": "play_music", "synthetic": true, "item": null, "note": "canción con palabra de calendario"}
+{"id": "syn54", "utt": "pon corridos tumbados", "annot_utt": "pon [music_genre: corridos tumbados]", "intent": "play_music", "synthetic": true, "item": null, "note": "género regional"}
+{"id": "syn55", "utt": "toca la playlist de la casa", "annot_utt": "toca la [playlist_name: playlist de la casa]", "intent": "play_music", "synthetic": true, "item": null, "note": "playlist posesiva"}
+{"id": "syn56", "utt": "pon música clásica para relajarme", "annot_utt": "pon [music_genre: música clásica] para relajarme", "intent": "play_music", "synthetic": true, "item": null, "note": "género clásico"}
+
+{"id": "syn57", "utt": "apaga las luces del dormitorio", "annot_utt": "apaga las luces del [house_place: dormitorio]", "intent": "control_luces", "synthetic": true, "item": null, "note": "apagar dormitorio"}
+{"id": "syn58", "utt": "prende la luz de la sala", "annot_utt": "prende la [device_type: luz] de la [house_place: sala]", "intent": "control_luces", "synthetic": true, "item": null, "note": "encender sala"}
+{"id": "syn59", "utt": "sube la intensidad de las luces del comedor", "annot_utt": "sube la intensidad de las luces del [house_place: comedor]", "intent": "control_luces", "synthetic": true, "item": null, "note": "subir intensidad"}
+{"id": "syn60", "utt": "baja las luces de la recámara", "annot_utt": "baja las luces de la [house_place: recámara]", "intent": "control_luces", "synthetic": true, "item": null, "note": "bajar recámara"}
+{"id": "syn61", "utt": "pon la luz cálida en la recámara", "annot_utt": "pon la luz [color_type: cálida] en la [house_place: recámara]", "intent": "control_luces", "synthetic": true, "item": null, "note": "color cálido"}
+{"id": "syn62", "utt": "cambia la luz a rojo en la sala", "annot_utt": "cambia la luz a [color_type: rojo] en la [house_place: sala]", "intent": "control_luces", "synthetic": true, "item": null, "note": "color rojo"}
+{"id": "syn63", "utt": "prende las luces de afuera", "annot_utt": "prende las luces de [house_place: afuera]", "intent": "control_luces", "synthetic": true, "item": null, "note": "afuera"}
+{"id": "syn64", "utt": "apaga todo en la cocina", "annot_utt": "apaga todo en la [house_place: cocina]", "intent": "control_luces", "synthetic": true, "item": null, "note": "cocina"}

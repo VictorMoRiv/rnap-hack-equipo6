@@ -18,10 +18,10 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from torch import nn
 from transformers import AutoTokenizer, get_linear_schedule_with_warmup
 
-from casa_norte.model import JointBert, align_slot_labels, predict, save_bundle
+from casa_norte.model import JointBert, align_slot_labels, plot_attention_map, predict, save_bundle
 from casa_norte.nlu import (
     CLASSES, ID2INTENT, INTENT2ID, SLOT_LABELS,
-    find_span, load_mexican, load_split, span_prf, spans_from_tags,
+    deduplicate_splits, find_span, load_jsonl, load_mexican, load_split, span_prf, spans_from_tags,
 )
 
 
@@ -246,23 +246,66 @@ def evaluate_mexican(rows, model, tokenizer, max_len, threshold, device):
     }
 
 
+def measure_model_latency(model, tokenizer, texts, max_len, device, limit=120):
+    durations = []
+    for text in texts[:limit]:
+        started = time.perf_counter()
+        predict(model, tokenizer, text, max_len=max_len)
+        durations.append((time.perf_counter() - started) * 1000.0)
+    return {
+        "mean_ms": float(np.mean(durations)),
+        "p50_ms": float(np.percentile(durations, 50)),
+        "p95_ms": float(np.percentile(durations, 95)),
+        "samples": len(durations),
+    }
+
+
+def threshold_sweep(details, step=0.05):
+    sweep = []
+    for index in range(4, 19):
+        threshold = round(index * step, 2)
+        accepted = sum(
+            1 for item in details
+            if not item["out_of_scope"] and item["confidence"] >= threshold
+        )
+        rejected = sum(
+            1 for item in details
+            if item["out_of_scope"] and item["confidence"] < threshold
+        )
+        sweep.append({
+            "threshold": threshold,
+            "in_domain_accepted": accepted,
+            "oos_rejected": rejected,
+        })
+    return sweep
+
+
+def load_baseline_metrics(path):
+    candidate = Path(path)
+    if not candidate.exists():
+        return None
+    return json.loads(candidate.read_text(encoding="utf-8"))
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="dccuchile/bert-base-spanish-wwm-cased")
     parser.add_argument("--data-dir", default=str(ROOT / "data"))
     parser.add_argument("--mexican", default=str(ROOT / "data" / "mexican_test.jsonl"))
-    parser.add_argument("--out", default=str(ROOT / "models" / "beto_joint"))
+    parser.add_argument("--out", default=str(ROOT / "modelo_casa_norte"))
     parser.add_argument("--figs", default=str(ROOT / "notebooks" / "figs"))
     parser.add_argument("--metrics", default=str(ROOT / "notebooks" / "metrics_fase2.json"))
     parser.add_argument("--errors", default=str(ROOT / "notebooks" / "error_cases.json"))
-    parser.add_argument("--epochs", type=int, default=3)
+    parser.add_argument("--synthetic", default=str(ROOT / "data" / "synthetic_norte_train.jsonl"))
+    parser.add_argument("--baseline-metrics", default=str(ROOT / "notebooks" / "metrics_baseline_prod.json"))
+    parser.add_argument("--epochs", type=int, default=4)
     parser.add_argument("--batch", type=int, default=16)
-    parser.add_argument("--lr", type=float, default=2e-5)
+    parser.add_argument("--lr", type=float, default=3e-5)
     parser.add_argument("--max-len", type=int, default=48)
     parser.add_argument("--dropout", type=float, default=0.2)
     parser.add_argument("--weight-decay", type=float, default=0.01)
     parser.add_argument("--warmup", type=float, default=0.1)
-    parser.add_argument("--threshold", type=float, default=0.55)
+    parser.add_argument("--threshold", type=float, default=0.65)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--limit", type=int, default=0)
     args = parser.parse_args()
@@ -273,17 +316,27 @@ def main():
     figs = Path(args.figs)
     figs.mkdir(parents=True, exist_ok=True)
 
-    train = load_split(args.data_dir, "train", set(CLASSES))
+    train_base = load_split(args.data_dir, "train", set(CLASSES))
     val = load_split(args.data_dir, "validation", set(CLASSES))
     test = load_split(args.data_dir, "test", set(CLASSES))
+    train_base, val, test = deduplicate_splits(train_base, val, test)
+    synthetic = []
+    if Path(args.synthetic).exists():
+        synthetic = load_jsonl(args.synthetic, set(CLASSES))
+    held_texts = {row["text"] for row in val} | {row["text"] for row in test}
+    synthetic = [row for row in synthetic if row["text"] not in held_texts]
+    train = train_base + synthetic
     if args.limit:
         per_class = max(1, args.limit // len(CLASSES))
-        by_class = {name: [row for row in train if row["intent"] == name] for name in CLASSES}
+        by_class = {name: [row for row in train_base if row["intent"] == name] for name in CLASSES}
         train = []
         for name in CLASSES:
             train.extend(random.sample(by_class[name], min(per_class, len(by_class[name]))))
         random.shuffle(train)
-    print(f"train={len(train)} val={len(val)} test={len(test)} device={device}", flush=True)
+    print(
+        f"train={len(train_base)} synthetic={len(synthetic)} val={len(val)} test={len(test)} device={device}",
+        flush=True,
+    )
 
     tokenizer = AutoTokenizer.from_pretrained(args.model)
     train_examples = featurize(train, tokenizer, args.max_len, with_word_ids=False)
@@ -328,7 +381,7 @@ def main():
             scheduler.step()
             running_loss += float(loss.item())
             steps += 1
-        val_metrics, _ = evaluate(val_examples, model, device)
+        val_metrics, _ = evaluate(val_examples, model, device, batch_size=args.batch)
         entry = {
             "epoch": epoch,
             "train_loss": running_loss / max(1, steps),
@@ -348,9 +401,18 @@ def main():
         model.load_state_dict(best_state)
     train_seconds = time.perf_counter() - started
 
-    test_metrics, test_examples_out = evaluate(test_examples, model, device)
+    test_metrics, test_examples_out = evaluate(test_examples, model, device, batch_size=args.batch)
     mexican_rows = load_mexican(args.mexican)
     mexican_metrics = evaluate_mexican(mexican_rows, model, tokenizer, args.max_len, args.threshold, device)
+    latency = measure_model_latency(
+        model, tokenizer, [row["text"] for row in test], args.max_len, device
+    )
+    attention_example = "cómo va a estar el calor hoy en Monterrey"
+    attention_path, _, _ = plot_attention_map(
+        attention_example, model, tokenizer, args.max_len, figs / "attention_map.png"
+    )
+    sweep = threshold_sweep(mexican_metrics["details"])
+    baseline_metrics = load_baseline_metrics(args.baseline_metrics)
 
     errors = []
     for item in test_examples_out:
@@ -385,7 +447,13 @@ def main():
         "classes": CLASSES,
         "slot_labels": SLOT_LABELS,
         "threshold": args.threshold,
-        "train_size": len(train),
+        "output_attentions": True,
+        "epochs": args.epochs,
+        "learning_rate": args.lr,
+        "batch_size": args.batch,
+        "weight_decay": args.weight_decay,
+        "train_size": len(train_base),
+        "synthetic_size": len(synthetic),
         "val_size": len(val),
         "test_size": len(test),
     }
@@ -406,10 +474,19 @@ def main():
             "seed": args.seed,
             "class_weights": {name: round(float(weight), 3) for name, weight in zip(CLASSES, weights.cpu().tolist())},
         },
-        "sizes": {"train": len(train), "validation": len(val), "test": len(test)},
+        "sizes": {
+            "train": len(train_base),
+            "synthetic": len(synthetic),
+            "validation": len(val),
+            "test": len(test),
+        },
         "best_epoch": best_epoch,
         "train_seconds": round(train_seconds, 1),
         "history": history,
+        "latency": latency,
+        "attention_map": str(attention_path),
+        "threshold_sweep": sweep,
+        "baseline": baseline_metrics,
         "test": {key: value for key, value in test_metrics.items() if key not in {"gold_intents", "pred_intents", "confidences"}},
         "mexican": {key: value for key, value in mexican_metrics.items() if key != "details"},
         "mexican_details": mexican_metrics["details"],
@@ -425,6 +502,8 @@ def main():
         "mexican_accuracy": mexican_metrics["accuracy"],
         "mexican_slot_f1": mexican_metrics["slot_span_f1"],
         "mexican_oos_rejection": mexican_metrics["oos_rejection_rate"],
+        "transformer_mean_ms": latency["mean_ms"],
+        "attention_map": str(attention_path),
         "best_epoch": best_epoch,
         "train_seconds": round(train_seconds, 1),
     }, ensure_ascii=False, indent=2), flush=True)

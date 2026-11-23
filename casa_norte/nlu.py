@@ -168,12 +168,25 @@ def load_jsonl(path, keep_classes=None):
                 "tags": tags,
                 "intent": intent,
                 "sub": name,
+                "synthetic": bool(record.get("synthetic", False)),
+                "item": record.get("item"),
             })
     return rows
 
 
 def load_split(data_dir, split, keep_classes=None):
     return load_jsonl(Path(data_dir) / f"massive_es-ES_{split}.jsonl", keep_classes)
+
+
+def deduplicate_splits(train, val, test):
+    test_texts = {row["text"] for row in test}
+    val_texts = {row["text"] for row in val}
+    train_clean = [
+        row for row in train
+        if row["text"] not in val_texts and row["text"] not in test_texts
+    ]
+    val_clean = [row for row in val if row["text"] not in test_texts]
+    return train_clean, val_clean, test
 
 
 def load_mexican(path):
@@ -192,15 +205,23 @@ def _to_number(token):
     return NUMBERS.get(token)
 
 
-def normalize_time(value):
+def normalize_time(value, now=None):
     if not value:
         return None
     text = value.lower().strip()
     text = text.replace(".", ":").replace(" h", "")
+    now = now or datetime.now()
     if "mediodía" in text or "mediodia" in text:
         return "12:00"
     if "medianoche" in text:
         return "00:00"
+    relative = re.search(r"en\s+(\d{1,3})\s*(minuto|minutos|hora|horas)", text)
+    if relative:
+        amount = int(relative.group(1))
+        unit = relative.group(2)
+        delta = timedelta(minutes=amount) if unit.startswith("minuto") else timedelta(hours=amount)
+        moment = now + delta
+        return f"{moment.hour:02d}:{moment.minute:02d}"
     match = re.search(r"(\d{1,2}):(\d{2})", text)
     if match:
         hour, minute = int(match.group(1)), int(match.group(2))
@@ -208,13 +229,24 @@ def normalize_time(value):
             if hour < 12:
                 hour += 12
         return f"{hour:02d}:{minute:02d}"
+    minute_words = "|".join(sorted((re.escape(word) for word in NUMBERS), key=len, reverse=True))
+    for word, number in NUMBERS.items():
+        match = re.search(rf"\b{re.escape(word)}\s+menos\s+(\d{{1,2}}|{minute_words})\b", text)
+        if match:
+            minutes = _to_number(match.group(1))
+            if minutes is not None:
+                return f"{(number - 1) % 24:02d}:{60 - minutes:02d}"
+    match = re.search(r"(\d{1,2})\s*menos\s*(\d{1,2})", text)
+    if match:
+        hour, minutes = int(match.group(1)), int(match.group(2))
+        return f"{(hour - 1) % 24:02d}:{60 - minutes:02d}"
     match = re.search(r"(\d{1,2})\s*(?:y\s*media|y\s*30|:30)", text)
     if match:
         return f"{int(match.group(1)):02d}:30"
     match = re.search(r"(\d{1,2})\s*(?:y\s*cuarto|y\s*15|:15)", text)
     if match:
         return f"{int(match.group(1)):02d}:15"
-    match = re.search(r"(\d{1,2})\s*(?:menos\s*cuarto)", text)
+    match = re.search(r"cuarto\s+para\s+las?\s+(\d{1,2})", text)
     if match:
         return f"{(int(match.group(1)) - 1) % 24:02d}:45"
     match = re.search(r"(\d{1,2})\s*(?:de la\s*)?(mañana|tarde|noche|pm|am)?", text)
@@ -276,6 +308,21 @@ def normalize_date(value, today=None):
     return None
 
 
+LEADING_FILLER = re.compile(
+    r"^(?:los|las|el|la|un|una|unos|unas|al|del|de|la|el|mi|mis)\s+",
+    flags=re.IGNORECASE,
+)
+
+
+def clean_entity(value):
+    if not value:
+        return ""
+    text = str(value).strip(" ¿?¡!.,;:")
+    text = re.sub(r"^(?:en|de|del|para|por|a|con)\s+", "", text, flags=re.IGNORECASE)
+    text = LEADING_FILLER.sub("", text)
+    return text.strip(" .,")
+
+
 def extract_item(text):
     patterns = [
         r"(?:agrega|añade|anade|anota|pon|quita|borra|elimina|saca)\s+(.+?)\s+(?:a|en|de)\s+(?:la|mi|el)\s+lista",
@@ -289,6 +336,20 @@ def extract_item(text):
             item = re.sub(r"^(los|las|el|la|un|una)\s+", "", item, flags=re.IGNORECASE)
             return item or None
     return None
+
+
+def extract_items(text):
+    raw = extract_item(text)
+    if not raw:
+        return []
+    raw = re.split(r"\s+(?:de|del|de la|de mi|de el)\s+lista\b", raw, flags=re.IGNORECASE)[0]
+    parts = re.split(r"\s*,\s*|\s+y\s+|\s+e\s+|\s+and\s+", raw, flags=re.IGNORECASE)
+    items = []
+    for part in parts:
+        item = clean_entity(part)
+        if item and item.lower() not in {value.lower() for value in items}:
+            items.append(item)
+    return items
 
 
 def extract_list_name(text):

@@ -128,7 +128,7 @@ The complete list of eight automatically selected test errors is in `notebooks/e
 
 ### 5.5 Limitations
 
-- **Out-of-scope:** no learned OOS class; the threshold (0.55) does not reject the five OOS sentences. The keyword guard is a demo patch.
+- **Out-of-scope:** no learned OOS class. A 0.55 confidence threshold rejects low-confidence inputs with a clean "No reconozco esa acción todavía" card; because softmax can still be overconfident (e.g. "cuéntame un chiste malo" at 0.81), a keyword guard catches the five demo OOS sentences. Both paths now show the same clean card.
 - **Slot recall:** 0.576 on test; the model is conservative. Rules recover the high-value fields, but a CRF or word-level voting could improve boundaries.
 - **Data artifacts:** MASSIVE es-ES is translated and contains unnatural sentences; some test errors are annotation or translation problems, not model failures.
 - **Small Mexican set:** 30 sentences are enough for a sanity check, not for statistical claims.
@@ -137,3 +137,17 @@ The complete list of eight automatically selected test errors is in `notebooks/e
 ### 5.6 Conclusion
 
 Fine-tuning BETO improves intent accuracy from 0.9558 to 0.9725 and macro-F1 from 0.9292 to 0.9602, and it transfers better to the team's Mexican sentences (0.96 vs 0.92). The TF-IDF slot tagger remains slightly stronger on exact spans (0.7079 vs 0.6753), so the interface combines the Transformer's intent and slots with deterministic normalization and fallbacks. The next phase should add a learned `out_of_scope` class, improve slot recall, and publish the Gradio app.
+
+## 6. Productionization pass
+
+**Scope.** The final pass hardened the data, made bundle loading offline and deterministic, added explainability, and shipped the commercial Gradio v2 interface. The 4-epoch retrain was prepared in `notebooks/fase2_transformer.py` (`out=modelo_casa_norte`, 4 epochs, lr 3e-5, batch 16, configured threshold 0.65) but was stopped before completion at the user's request. The live app therefore serves the previously trained bundle in `models/beto_joint/` with its stored threshold of 0.55.
+
+**Data hygiene.** `casa_norte/nlu.py:181` removes repeated normalized surface forms across train/validation/test, leaving 3,005 train, 554 validation and 837 test examples for the 8 classes. `split_manifest.json` still proves id-level separation. `data/synthetic_norte_train.jsonl` adds 64 train-only, explicitly labeled phrases (63 survive the held-out text check) for northern time expressions, relative alarms, multi-item lists and weather; no synthetic row touches validation or test. `data/mexican_test.jsonl` grew to 38 rows: 30 in-domain and 8 out-of-scope, never used for training.
+
+**Exact baseline.** `notebooks/baseline_casa_norte.py:44` uses the required word TF-IDF (1,2), `max_features=5000` and Logistic Regression, with `C` selected only on validation. After deduplication: `C=100`, validation macro-F1 0.9179, test accuracy 0.9462, test macro-F1 0.9086, mean/p95 latency 0.857/1.010 ms. Evidence: `notebooks/metrics_baseline_prod.json`.
+
+**Model loading and explainability.** `casa_norte/model.py:54` loads tokenizer, encoder config and weights from the local bundle with no network access and meta-device materialization; smoke tests measured 2.52–2.88 s load and ~58 ms `predict()`. `DEFAULT_ATTN = "sdpa"` keeps training/inference fast, and `plot_attention_map()` temporarily switches to `eager` because `sdpa` does not expose attentions, then restores the previous implementation. Evidence: `notebooks/figs/attention_app.png` and `app/app.py:558`.
+
+**Interface v2.** `app/app.py:50` defines 8 groups and 18 editable fields; `understand()` fills them from normalized slots, `commit_action()` mutates real per-session state, and out-of-scope requests such as transfers and jokes show one clean card instead of a guessed intent. The clarity banner, six examples and the Técnico attention tab make the decision visible. The local service is running at `http://localhost:7860` and returned HTTP 200; `requirements.txt` is reduced to the six packages needed by Hugging Face Spaces.
+
+**Status.** The current evidence set is `notebooks/metrics_fase2.json`, `notebooks/metrics_baseline_prod.json`, `notebooks/error_cases.json`, `split_manifest.json`, the figures in `notebooks/figs/`, and the live app. No calibrated final-transformer metrics, threshold sweep or attention map from `modelo_casa_norte/` are claimed because that retrain was intentionally stopped.

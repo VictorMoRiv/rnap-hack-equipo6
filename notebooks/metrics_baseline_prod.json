@@ -1,0 +1,33 @@
+{
+  "vectorizer": {
+    "ngram_range": [
+      1,
+      2
+    ],
+    "max_features": 5000
+  },
+  "classifier": "LogisticRegression",
+  "selected_C": 100.0,
+  "val_macro_f1": 0.9179393695893401,
+  "sizes": {
+    "train": 3005,
+    "synthetic": 63,
+    "validation": 554,
+    "test": 837
+  },
+  "test_accuracy": 0.946236559139785,
+  "test_macro_f1": 0.9085909590436874,
+  "latency": {
+    "mean_ms": 0.857172891276169,
+    "p50_ms": 0.8357510005225777,
+    "p95_ms": 1.0103082000568975
+  },
+  "leakage_check": {
+    "official_partitions_by_id_kept": true,
+    "duplicate_surface_forms_removed_from_train_and_validation": true,
+    "vectorizer_fit_on": "deduplicated train+synthetic only",
+    "classifier_fit_on": "deduplicated train+synthetic only",
+    "C_selected_on": "deduplicated validation only",
+    "test_used_only_for_final_metrics": true
+  }
+}

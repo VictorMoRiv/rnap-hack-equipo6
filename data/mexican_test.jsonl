@@ -28,3 +28,11 @@
 {"id": "mx28", "utt": "manda un correo a mi jefa", "intent": "out_of_scope", "slots": [], "item": null, "note": "email_sendemail, fuera de las 8"}
 {"id": "mx29", "utt": "¿me cuentas un chiste?", "intent": "out_of_scope", "slots": [], "item": null, "note": "general_joke, fuera de las 8"}
 {"id": "mx30", "utt": "pon una película en la tele", "intent": "out_of_scope", "slots": [], "item": null, "note": "recommendation_movies, fuera de las 8"}
+{"id": "mx31", "utt": "ponme el despertador a las seis y cuarto", "intent": "alarm_set", "slots": [{"type": "time", "value": "seis y cuarto"}], "item": null, "note": "hora en palabras"}
+{"id": "mx32", "utt": "pon la alarma a las 7 y media", "intent": "alarm_set", "slots": [{"type": "time", "value": "7 y media"}], "item": null, "note": "hora semis numérica"}
+{"id": "mx33", "utt": "la alarma a las ocho menos diez, porfa", "intent": "alarm_set", "slots": [{"type": "time", "value": "ocho menos diez"}], "item": null, "note": "menos diez regional"}
+{"id": "mx34", "utt": "despiértame en 20 minutos", "intent": "alarm_set", "slots": [{"type": "time", "value": "en 20 minutos"}], "item": null, "note": "tiempo relativo"}
+{"id": "mx35", "utt": "agrega tortillas, aguacate y un doce a la lista", "intent": "lists_createoradd", "slots": [], "item": "tortillas, aguacate, doce", "note": "artículos múltiples"}
+{"id": "mx36", "utt": "cómo va a estar el calor hoy en Monterrey", "intent": "weather_query", "slots": [{"type": "weather_descriptor", "value": "calor"}, {"type": "date", "value": "hoy"}, {"type": "place_name", "value": "Monterrey"}], "item": null, "note": "calor norteño"}
+{"id": "mx37", "utt": "transfiere 500 pesos a mi hermana", "intent": "out_of_scope", "slots": [], "item": null, "note": "transferencia bancaria, fuera de las 8"}
+{"id": "mx38", "utt": "cuéntame un chiste", "intent": "out_of_scope", "slots": [], "item": null, "note": "chiste, fuera de las 8"}
