@@ -84,7 +84,7 @@
   - Editable fields: time, date, event, place, item, song/artist/playlist, room/action/color.
   - Working actions with per-session state: save alarm, add/remove from the shopping list, save event, update lights, set "now playing" and open a YouTube search.
   - Normalization: "seis y media" → 06:30, "el viernes" → next Friday, list item extraction, light action from verbs, adjacent-slot merging.
-  - Out-of-scope guard and confidence threshold (0.55) with a clean "No reconozco esa acción todavía" card; low confidence no longer forces a guessed card.
+  - Out-of-scope guard and confidence threshold (0.55) with a clarification card; low confidence asks the user to rephrase.
   - Smoke-tested the app (launch, intent cards, fields and actions) on the team laptop.
 
 - **What we haven't done yet**:
@@ -97,34 +97,7 @@
   - Commit CP3 and CP4 during class time.
 
 - **Who did what**:
-   - Victor: interface v1, NLU normalization and integration with the model, with AI pair-programming.
-   - Travis: model review.
-   - Julio: coordination and demo script.
-   - Tamez: English deliverables.
-
-#
-## CP5 - 2026-11-22
-
-- **What we have done**:
-  - Audited train/validation/test leakage by id and normalized surface form; deduplicated sizes are 3,005 / 554 / 837, with `split_manifest.json` still proving id-level separation.
-  - Added 64 labeled synthetic train-only phrases (63 survive the held-out text check) and expanded the Mexican test set to 38 sentences: 30 in-domain + 8 out-of-scope, never used for training.
-  - Rebuilt the exact TF-IDF (1,2) + Logistic Regression baseline with validation-only `C=100`, latency measurement and `notebooks/metrics_baseline_prod.json`.
-  - Refactored `casa_norte/model.py` for offline bundle loading, fast `sdpa` attention and on-demand `eager` attention maps; smoke test measured 2.52–2.88 s load and ~58 ms prediction.
-  - Rebuilt the Gradio app as v2: 8 groups, 18 editable fields, real per-session state, out-of-scope card, clarity banner, six examples and a Técnico attention tab.
-  - Relaunched the local service at `http://localhost:7860` (HTTP 200) and added production cells to `notebooks/entrenamiento.ipynb` plus Section 6 of `notebooks/technical_report.md`.
-  - Reduced `requirements.txt` to the six packages needed by Hugging Face Spaces.
-  - Wrote the English Activity 12 troubleshooting evidence (`EVIDENCIA_APRENDIZAJE_ACT12_TROUBLESHOOTING.md` and `RNAP-ET4-D3-ACT12-TROUBLESHOOTING-EQUIPO6.pdf`) with five incidents, fixes and an evidence index.
-  - Merged the teammate's dark animated UI, relative alarms, multi-item lists, removal intents, `Enviar` button, reference D3 PDF and final pitch deck into this branch.
-
-- **What we haven't done yet**:
-  - The 4-epoch transformer retrain that writes `modelo_casa_norte/`, its calibrated threshold sweep and its final attention map; stopped at the user's request to keep the model work short.
-  - Public deployment, a learned `out_of_scope` class and better slot recall.
-
-- **Next step**:
-  - Present the working local demo and the current evidence in technical English; keep the app running for the judge's test.
-
-- **Who did what**:
-  - Victor: production code, data audit, baseline rerun, app v2, local service and report Section 6, with AI pair-programming.
-  - Travis: baseline and model review.
+  - Victor: interface v1, NLU normalization and integration with the model, with AI pair-programming.
+  - Travis: model review.
   - Julio: coordination and demo script.
   - Tamez: English deliverables.

@@ -24,7 +24,7 @@ Can the system understand what the user wants from one sentence, pick out the ke
 4. The interface shows the matching **card** with the data already filled in and hides the rest.
 5. An action on the card produces a **real change** in the app state (e.g. the alarm is added to the alarm list). If the user edits a value on the card, the app state changes too.
 
-> Phase 1 covered steps 1–3. Phase 2 added the fine-tuned Transformer and Gradio v1. The final pass hardens data hygiene, adds labeled synthetic training phrases, calibrates out-of-scope behavior, exposes attention and ships the commercial Gradio v2 interface.
+> Phase 1 covered steps 1–3. Phase 2 adds the fine-tuned Transformer and the Gradio interface v1 (steps 4–5).
 
 ## Approach
 
@@ -58,16 +58,15 @@ Two dataset details:
 - `control_luces` **groups** five MASSIVE intents (`iot_hue_lighton`, `iot_hue_lightoff`, `iot_hue_lightup`, `iot_hue_lightdim`, `iot_hue_lightchange`) because `iot_hue_lighton` alone has only 22 training sentences.
 - MASSIVE has no `reminder` intent. Reminders are covered by `calendar_set` ("pon un recordatorio para llamar a Pablo mañana") and `alarm_set`.
 
-Sentences outside these intents are handled with a confidence threshold stored in the model bundle (0.65 in the final training config; the currently served `models/beto_joint/` bundle uses 0.55) plus a conservative keyword guard for obvious out-of-scope requests such as transfers, jokes or food delivery. Neither is a learned `out_of_scope` class; the app says "No reconozco esa acción todavía" instead of forcing a wrong card.
+Sentences outside these intents are handled as follows: the fine-tuned model uses a 0.55 confidence threshold and the Gradio app adds a conservative keyword guard for obvious out-of-scope requests. Neither is a learned `out_of_scope` class, so a dedicated class and better calibration remain future work.
 
 ## Data
 
 - **MASSIVE**, locale `es-ES`, version 1.1: 16,521 sentences, 60 intents and 55 slot types ([Hugging Face](https://huggingface.co/datasets/AmazonScience/massive)).
 - A local copy of the filtered data is in `data/` (`massive_es-ES_train.jsonl`, `massive_es-ES_validation.jsonl`, `massive_es-ES_test.jsonl`).
-- The official partitions are kept by id; additionally, repeated surface forms are removed from train and validation before fitting. Deduplicated sizes for the 8 classes: **train = 3,005**, **validation = 554**, **test = 837**. `validation` is used only to choose hyperparameters; `test` is used once, for the final metrics.
-- `split_manifest.json` stores the sentence ids of each partition to prove there is no id leakage; the scripts also assert that no normalized text crosses the partition boundary.
-- **Extra test set:** 38 Mexican-style sentences written by the team (`data/mexican_test.jsonl`, 30 in-domain + 8 out-of-scope). They are **not** used for training.
-- **Synthetic augmentation:** 64 train-only phrases in `data/synthetic_norte_train.jsonl`, each marked `synthetic: true` (63 survive the held-out text check). They cover northern/Mexican times such as *seis y cuarto*, *siete y media*, *ocho menos diez*, relative alarms (*en 20 minutos*), multi-item lists (*un doce*) and *calor hoy en Monterrey*. No synthetic row appears in validation or test.
+- The official partitions are kept: **train = 3,127**, **validation = 565**, **test = 837** sentences for the 8 classes. `validation` is used only to choose hyperparameters; `test` is used once, for the final metrics.
+- `split_manifest.json` stores the sentence ids of each partition to prove there is no leakage.
+- **Extra test set:** 30 Mexican-style sentences written by the team (`data/mexican_test.jsonl`, 25 in-domain + 5 out-of-scope). They are **not** used for training.
 
 ## Evaluation
 
@@ -92,26 +91,21 @@ BETO improves intent accuracy (+0.017) and macro-F1 (+0.031), and transfers bett
 
 ## Interface
 
-Built with **Gradio** in `app/app.py` (merged v2): a dark commercial UI with animated HTML cards, an **Enviar** button, editable action fields, an **Aplicar acción** button and a live **Estado de la Casa** tab.
+Built with **Gradio** in `app/app.py`: one card per intent (alarm, weather, shopping list, calendar, music, lights) appears when detected and hides the rest, with editable fields and a button that changes the app state.
 
-- The intent and slots come from a local bundle. Loading is offline and measured below 3 s on the demo CPU; the live app currently serves `models/beto_joint/` because the retrain to `modelo_casa_norte/` was stopped. The app uses `modelo_casa_norte/` automatically if that bundle is created later.
-- Alarms, events, the shopping list, the light state and "now playing" are kept per session with real `gr.State` objects; the card can be cleared with **Limpiar**.
-- Relative alarms (*en 20 minutos*), cancellation/removal intents and multi-item lists are handled by explicit rules and fallbacks.
-- Time and date normalization covers informal forms: *seis y cuarto* → 06:15, *ocho menos diez* → 07:50, *en 20 minutos* → current time + 20 min, *el viernes* → next Friday.
-- Items are split deterministically by commas, *y*, *e* or *and*; place, person and list values are cleaned from leading prepositions and articles.
+- The intent and slots come from the fine-tuned BETO model in `models/beto_joint/`.
+- Alarms, events, the shopping list, the light state and "now playing" are kept per session with `gr.State`.
+- Time and date values are normalized ("seis y media" → 06:30, "el viernes" → next Friday).
 - Weather is a clearly labeled demo (no external API); music opens a YouTube search.
-- Out-of-scope text or confidence below the configured threshold shows the same clean "No reconozco esa acción todavía" card; transfers and jokes are covered by the keyword guard.
-- A **Técnico** tab renders the last-layer attention map with `plot_attention_map()`.
-- Nine quick examples include the OOS trap *"transfiere 500 pesos a mi hermana"*.
+- Out-of-scope text gets a clarification card, and confidence below 0.55 asks the user to rephrase.
 
 ```bash
 pip install -r requirements.txt
-python notebooks/baseline_casa_norte.py  # exact TF-IDF + LogReg baseline + latency
-python notebooks/fase2_transformer.py    # trains and saves modelo_casa_norte/
-python app/app.py                        # http://0.0.0.0:7860
+python notebooks/fase2_transformer.py   # trains and saves models/beto_joint (CPU: ~46 min)
+python app/app.py                       # http://127.0.0.1:7860
 ```
 
-Current version: local service on the team laptop at `http://localhost:7860` (HTTP 200). Public Hugging Face Spaces deployment: pending.
+Final version: Hugging Face Spaces (free CPU) or the team laptop. Live demo link: pending.
 
 **Planned extra:** a cutaway "home simulator" in the style of The Sims inside the interface: little characters, lights that turn on, and an alarm on the bed that reacts to the user's commands.
 
@@ -119,29 +113,22 @@ Current version: local service on the team laptop at `http://localhost:7860` (HT
 
 ```
 .
-├── app/app.py               # Gradio interface v2: groups, state, technical tab
-├── casa_norte/              # shared NLU code: data parsing, normalization, model, attention
-├── data/                    # MASSIVE es-ES + 38 Mexican + 64 synthetic train phrases
-├── modelo_casa_norte/       # target final offline bundle; retrain stopped, not created yet (ignored)
-├── models/beto_joint/       # Phase 2 weights (ignored by git, 420 MB)
+├── app/app.py               # Gradio interface v1
+├── casa_norte/              # shared NLU code: data parsing, normalization, model
+├── data/                    # MASSIVE es-ES copy + 30 Mexican sentences
+├── models/beto_joint/       # fine-tuned weights (ignored by git, 420 MB)
 ├── notebooks/
 │   ├── casa_norte_8intenciones.py   # Phase 1 baseline + zero-shot
-│   ├── baseline_casa_norte.py       # exact TF-IDF + LogReg baseline + latency
-│   ├── fase2_transformer.py         # BETO fine-tune, metrics, figures, attention, errors
-│   ├── entrenamiento.ipynb          # production cells: audit → baseline → train → explain → app
-│   ├── eval_baseline_mexican.py      # baseline on the Mexican set
-│   ├── figs/                        # confusion matrix, F1, curves, attention heatmaps
-│   ├── metrics_fase2.json           # final transformer metrics
-│   ├── metrics_baseline_prod.json   # exact baseline metrics + latency + leakage check
+│   ├── fase2_transformer.py         # BETO fine-tune, metrics, figures, errors
+│   ├── eval_baseline_mexican.py      # baseline on the 30 Mexican sentences
+│   ├── figs/                        # confusion matrix, per-class F1, curves
+│   ├── metrics_fase2.json           # Phase 2 metrics
+│   ├── metrics_baseline.json        # baseline on test + Mexican
 │   ├── error_cases.json             # 8 test error cases
-│   └── technical_report.md          # sections 1–6
-├── PROGRESS.md              # checkpoint log (CP1–CP5)
+│   └── technical_report.md          # sections 1–5
+├── PROGRESS.md              # checkpoint log (CP1–CP4)
 ├── README.md
-├── EVIDENCIA_APRENDIZAJE_ACT12_TROUBLESHOOTING.md
-├── RNAP-ET4-D3-ACT12-TROUBLESHOOTING-EQUIPO6.pdf  # English D3 / Act. 12 evidence
 ├── RNAP-ET4-D2.pdf          # English D2 deliverable
-├── CIIT-ET4-D3-EQUIPO_LOBOSALFA.pdf  # reference D3 example
-├── Casa Norte pitch deck.pdf        # final presentation deck
 ├── requirements.txt
 └── split_manifest.json      # ids of the train/validation/test splits
 ```
@@ -150,12 +137,12 @@ Current version: local service on the team laptop at `http://localhost:7860` (HT
 
 ```bash
 pip install -r requirements.txt
-python notebooks/baseline_casa_norte.py       # exact baseline, validation-only C, latency
-python notebooks/fase2_transformer.py         # final BETO fine-tune (CPU: ~1 h, 4 epochs)
-python app/app.py                             # interface v2
+python notebooks/casa_norte_8intenciones.py   # Phase 1 baseline + zero-shot
+python notebooks/fase2_transformer.py         # Phase 2 BETO fine-tune (CPU: ~46 min)
+python app/app.py                             # interface v1
 ```
 
-`requirements.txt` is intentionally small for Hugging Face Spaces: torch, transformers, scikit-learn, numpy, matplotlib and gradio. All data is local JSONL, so `datasets`, `scipy`, `sentencepiece` and `pandas` are no longer required. Model weights are not committed (420 MB); the training script regenerates them in `modelo_casa_norte/`.
+`requirements.txt` pins `datasets==2.19.0` because MASSIVE still ships a loading script and `datasets` 3+ removed script support. `fase2_transformer.py` reads the JSONL files already in `data/`, so it does not need to download the dataset. Model weights are not committed (420 MB); the training script regenerates them.
 
 ## Judging Criteria (Track 5)
 

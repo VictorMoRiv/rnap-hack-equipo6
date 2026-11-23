@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 try:
-    from casa_norte.model import load_bundle, plot_attention_map, predict  # noqa: E402
+    from casa_norte.model import load_bundle, predict  # noqa: E402
 except Exception as error:
     load_bundle = None
     predict = None
@@ -27,9 +27,7 @@ from casa_norte.nlu import (  # noqa: E402
     normalize_date, normalize_time,
 )
 
-NEW_MODEL_DIR = ROOT / "modelo_casa_norte"
-OLD_MODEL_DIR = ROOT / "models" / "beto_joint"
-MODEL_DIR = NEW_MODEL_DIR if NEW_MODEL_DIR.exists() else OLD_MODEL_DIR
+MODEL_DIR = ROOT / "models" / "beto_joint"
 THRESHOLD = 0.55
 BUNDLE = None
 
@@ -49,7 +47,6 @@ EXAMPLES = [
     "quita las tortillas de la lista",
     "¿va a llover hoy en Monterrey?",
     "apaga las luces del cuarto",
-    "transfiere 500 pesos a mi hermana",
 ]
 
 WEATHER_DEMO = {
@@ -240,7 +237,7 @@ footer a[href*="/runs"]:hover {
 }
 
 /* Entradas de texto */
-.gradio-container textarea,
+.gradio-container textarea, 
 .gradio-container input[type="text"] {
   background-color: #162035 !important;
   color: #ffffff !important;
@@ -249,12 +246,12 @@ footer a[href*="/runs"]:hover {
   font-size: 0.98rem !important;
 }
 
-.gradio-container textarea::placeholder,
+.gradio-container textarea::placeholder, 
 .gradio-container input::placeholder {
   color: #64748b !important;
 }
 
-.gradio-container textarea:focus,
+.gradio-container textarea:focus, 
 .gradio-container input[type="text"]:focus {
   border-color: #6366f1 !important;
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25) !important;
@@ -532,8 +529,6 @@ footer a[href*="/runs"]:hover {
 }
 """
 
-CSS = CUSTOM_CSS
-
 
 def clean_value(value):
     if not value:
@@ -676,7 +671,6 @@ OOS_PATTERNS = [
     r"\b(película|pelicula|películas|peliculas)\b",
     r"\b(receta|recetas|cocinar)\b",
     r"\b(noticias|traducir)\b",
-    r"\b(transfiere|transferir|transferencia|pagar|pago)\b.*\b(pesos|dólares|dolares|mxn|usd)\b",
 ]
 
 
@@ -873,7 +867,7 @@ def render_state(alarms, shopping, events, lights, music):
     <div class="cn-dash-title">Estado de Casa Norte</div>
     <div class="cn-dash-badge">EN LÍNEA</div>
   </div>
-
+  
   <div class="cn-dash-grid">
     <div class="cn-dash-tile">
       <div class="cn-dash-tile-title">Alarmas ({len(alarms)})</div>
@@ -1364,16 +1358,6 @@ def clear_all():
     )
 
 
-def render_attention(text):
-    if BUNDLE is None:
-        return None, f"Modelo no disponible: {LOAD_ERROR or 'bundle no cargado'}"
-    sample = (text or "").strip() or "cómo va a estar el calor hoy en Monterrey"
-    model, tokenizer, _ = BUNDLE
-    target = ROOT / "notebooks" / "figs" / "attention_app.png"
-    path, _, _ = plot_attention_map(sample, model, tokenizer, output_path=target)
-    return path, f"Mapa de atención de la última capa para: **{sample}**"
-
-
 theme = gr.themes.Soft(
     primary_hue="indigo",
     secondary_hue="amber",
@@ -1426,16 +1410,6 @@ with gr.Blocks(title="Casa Norte", css=CUSTOM_CSS, theme=theme) as demo:
         with gr.Tab("Estado de la Casa", id="tab_status"):
             state_output = gr.HTML(render_state([], [], [], {}, None))
 
-        with gr.Tab("Técnico", id="tab_technical"):
-            gr.Markdown("Texto → intención + slots → atención de la última capa de BETO.")
-            attention_text = gr.Textbox(
-                label="Frase para inspeccionar",
-                value="cómo va a estar el calor hoy en Monterrey",
-            )
-            attention_button = gr.Button("Ver atención", variant="secondary")
-            attention_image = gr.Image(label="Atención promedio", type="filepath")
-            attention_note = gr.Markdown()
-
     alarms_state = gr.State([])
     shopping_state = gr.State([])
     events_state = gr.State([])
@@ -1477,11 +1451,6 @@ with gr.Blocks(title="Casa Norte", css=CUSTOM_CSS, theme=theme) as demo:
             field1, field2, field3, field4, action_output, state_output,
             alarms_state, shopping_state, events_state, lights_state, music_state,
         ],
-    )
-    attention_button.click(
-        render_attention,
-        inputs=[attention_text],
-        outputs=[attention_image, attention_note],
     )
 
 
